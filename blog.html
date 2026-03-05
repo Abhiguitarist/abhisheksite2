@@ -1,23 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Abhishek Sessions Blog</title>
-<style>
-body{font-family:Arial;padding:40px;background:#111;color:white}
-h1{color:#d4af37}
-a{color:#d4af37}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog | Abhishek Sessions</title>
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --card:#12121a;
+      --text:#e9e9ee;
+      --muted:#b8b8c6;
+      --gold:#d4af37;
+      --line:rgba(212,175,55,.22);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(900px 500px at 20% 0%, rgba(212,175,55,.10), transparent 60%),
+                  radial-gradient(900px 500px at 80% 20%, rgba(212,175,55,.08), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 64px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      padding:10px 12px;border:1px solid var(--line);border-radius:14px;
+      background: rgba(18,18,26,.55);backdrop-filter: blur(8px);
+    }
+    .mark{
+      width:44px;height:44px;border-radius:14px;
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      color:var(--gold);font-weight:800;letter-spacing:.5px;
+      background: rgba(212,175,55,.06);
+    }
+    .brand h1{font-size:16px;margin:0;letter-spacing:.6px}
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .btn{
+      text-decoration:none;color:var(--bg);
+      background: linear-gradient(180deg, #f2d27a, var(--gold));
+      padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;
+      border:1px solid rgba(0,0,0,.25);
+      box-shadow: 0 10px 24px rgba(212,175,55,.18);
+      white-space:nowrap;
+    }
+    .hero{
+      padding:22px 18px;border:1px solid var(--line);border-radius:18px;
+      background: rgba(18,18,26,.55);backdrop-filter: blur(8px);
+      margin-bottom:18px;
+    }
+    .hero h2{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
+    .hero .sub{margin:0;color:var(--muted);max-width:68ch;line-height:1.5}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
+    .card{
+      border:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:16px;padding:16px;
+    }
+    .tag{display:inline-flex;gap:8px;align-items:center;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--line);color:var(--gold);font-size:12px;font-weight:700;
+      background: rgba(212,175,55,.06);
+      margin-bottom:10px;
+    }
+    .card h3{margin:6px 0 6px;font-size:18px}
+    .meta{color:var(--muted);font-size:12px;margin:0 0 12px}
+    .card a{color:var(--text);text-decoration:none}
+    .read{
+      display:inline-flex;align-items:center;gap:8px;
+      color:var(--gold);font-weight:700;font-size:13px;
+    }
+    .read span{opacity:.9}
+    footer{margin-top:28px;color:var(--muted);font-size:12px;opacity:.9}
+    @media (max-width:720px){
+      .grid{grid-template-columns:1fr}
+      .hero h2{font-size:24px}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mark">AS</div>
+        <div>
+          <h1>ABHISHEK SESSIONS</h1>
+          <p>Blog • Guitar • Piano • Performance</p>
+        </div>
+      </div>
+      <a class="btn" href="/">Back to Website</a>
+    </div>
 
-<h1>Abhishek Sessions Blog</h1>
+    <section class="hero">
+      <h2>Abhishek Sessions Blog</h2>
+      <p class="sub">
+        Short, practical insights on learning music — guitar techniques, piano skills, practice routines,
+        and stage confidence. Updated regularly.
+      </p>
 
-<p>Insights on learning music, guitar techniques, piano skills and stage confidence.</p>
+      <div class="grid">
+        <article class="card">
+          <div class="tag">New • Foundation</div>
+          <h3><a href="/blog/first-post.md">Welcome to Abhishek Sessions Blog</a></h3>
+          <p class="meta">Start here — what this blog will cover and how it helps your music journey.</p>
+          <a class="read" href="/blog/first-post.md"><span>Read article</span> →</a>
+        </article>
 
-<ul>
-<li><a href="blog/first-post.md">Welcome to Abhishek Sessions Blog</a></li>
-</ul>
+        <article class="card">
+          <div class="tag">Next • Coming Soon</div>
+          <h3>Guitar Basics in 7 Days</h3>
+          <p class="meta">A beginner-friendly roadmap (post coming soon).</p>
+          <span class="read"><span>Publishing shortly</span> →</span>
+        </article>
+      </div>
+    </section>
 
+    <footer>
+      ©️ <span id="y"></span> Abhishek Sessions • Formerly Musicphonetics • MSME Registered
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

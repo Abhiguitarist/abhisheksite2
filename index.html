@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Abhishek Sessions | Structured Music Mentorship</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- Netlify Lead Capture Form (silent) -->
+  <form name="leads" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input name="bot-field" />
+    <input type="text" name="fullName" />
+    <input type="tel" name="phone" />
+    <input type="text" name="location" />
+    <input type="text" name="pincode" />
+    <input type="text" name="instrument" />
+    <input type="text" name="format" />
+    <input type="text" name="pricingTier" />
+    <input type="text" name="page" />
+  </form>
+
+  <!-- Top Controls -->
+  <button class="icon-btn back-global" id="backGlobal" aria-label="Back" title="Back">←</button>
+  <button class="icon-btn burger" id="burger" aria-label="Menu" title="Menu">☰</button>
+
+  <!-- Side Menu -->
+  <div class="menu-scrim" id="menuScrim"></div>
+  <aside class="side-menu" id="sideMenu" aria-hidden="true">
+    <div class="side-head">
+      <div class="side-title">Menu</div>
+      <button class="side-close" id="sideClose" aria-label="Close menu">✕</button>
+    </div>
+
+    <nav class="side-links">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#method" class="nav-link">Teaching Style</a>
+      <a href="#about" class="nav-link">About the Mentor</a>
+      <a href="#gallery" class="nav-link">Gallery</a>
+      <a href="#patron" class="nav-link">Patron Circle</a>
+      <a href="#reviews" class="nav-link">Reviews</a>
+      <a href="#faq" class="nav-link">FAQs</a>
+      <a href="#media" class="nav-link">Media</a>
+      <a href="#contact" class="nav-link">Get in Touch</a>
+      <button class="nav-cta" id="openApplyFromMenu">Request Private Consideration</button>
+    </nav>
+
+    <div class="side-foot">
+      <a class="side-social" href="https://instagram.com/abhisheksessions" target="_blank" rel="noopener">Instagram</a>
+      <a class="side-social" href="https://youtube.com/@abhisheksessions" target="_blank" rel="noopener">YouTube</a>
+      <div class="side-micro">Formerly Musicphonetics. Established 2016. MSME Registered. 4.8 Google Rating.</div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- HERO -->
+    <section id="home" class="hero">
+      <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+      <div class="hero-scrim" aria-hidden="true"></div>
+
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-kicker">Structured Music Mentorship</div>
+
+          <!-- MOBILE TRUST STACK (only visible on mobile; SINGLE CTA here) -->
+          <div class="hero-trustStack">
+            <div class="trust-headline">
+              Unlock Your Child’s Musical Potential
+              <div class="trust-subline">Through Structured One-on-One Mentorship.</div>
+            </div>
+
+            <div class="trust-stars" aria-label="4.8 star rating">
+              <span class="stars">★★★★★</span>
+            </div>
+
+            <div class="trust-ratingLine">
+              <span class="ratingNumber">4.8</span>
+              <span class="ratingSlash">/5</span>
+              <span class="ratingText">Rated Music Mentorship in Delhi</span>
+            </div>
+
+            <div class="trust-mini">(120+ Verified Reviews)</div>
+
+            <div class="trust-strip">
+              Trusted by families from DU • Top schools • Stage performers
+            </div>
+
+            <div class="trust-seals">
+              <div class="trust-seal">
+                <div class="seal-title">Presidium School</div>
+                <div class="seal-sub">Excellent character certificate</div>
+              </div>
+
+              <div class="trust-seal">
+                <div class="seal-title">AHPS (under AWES)</div>
+                <div class="seal-sub">Excellent character certificate</div>
+              </div>
+            </div>
+
+            <div class="trust-award">🏅 Judge Award at MSI • IPU</div>
+
+            <button class="btn primary trust-cta" id="openApplyMobile">
+              Request Private Consideration
+            </button>
+
+            <a class="trust-link" href="#about">View credentials →</a>
+          </div>
+
+          <!-- DESKTOP TITLE -->
+          <h1 class="hero-title">Abhishek Sessions</h1>
+
+          <div class="hero-heritage">
+            <span>Formerly Musicphonetics</span>
+            <span class="dot">•</span>
+            <span>Established 2016</span>
+            <span class="dot">•</span>
+            <span>MSME Registered</span>
+          </div>
+
+          <p class="hero-sub">
+            Private allocation. Limited intake. Home sessions across Delhi.
+          </p>
+
+          <!-- DESKTOP CTA (mobile hides this block so only ONE CTA remains) -->
+          <div class="hero-cta">
+            <button class="btn primary" id="openApply">Request Private Consideration</button>
+            <a class="hero-link" href="#about">View credentials →</a>
+          </div>
+
+          <div class="hero-quote" id="heroQuote">
+            Cheap training is expensive. You pay later with confidence.
+            <span class="by">Abhishek Sessions Principle</span>
+          </div>
+
+          <div class="trust-chips">
+            <div class="chip">4.8 Google rating</div>
+            <div class="chip">Most demanded in Delhi Cantt</div>
+            <div class="chip">Defence discipline</div>
+          </div>
+        </div>
+
+        <!-- Right Authority card (desktop only) -->
+        <div class="hero-right">
+          <div class="authority-card">
+            <div class="authority-head">
+              <div class="authority-title">Character and Professional Standing</div>
+              <div class="authority-mini">Clean record. Institutional trust.</div>
+            </div>
+
+            <div class="seal-grid">
+              <div class="seal">
+                <div class="seal-top">
+                  <img class="seal-logo" src="assets/endorsements/presidium.png" alt="Presidium School" onerror="this.style.display='none'">
+                  <div class="seal-name">Presidium School</div>
+                </div>
+                <div class="seal-line">Excellent character certificate</div>
+              </div>
+
+              <div class="seal">
+                <div class="seal-top">
+                  <img class="seal-logo" src="assets/endorsements/awes.png" alt="AWES" onerror="this.style.display='none'">
+                  <div class="seal-name">AHPS under AWES</div>
+                </div>
+                <div class="seal-line">Excellent character certificate</div>
+              </div>
+
+              <div class="seal wide">
+                <div class="seal-top">
+                  <div class="seal-name">MSI and IPU</div>
+                </div>
+                <div class="seal-line">Judge award and institutional recognition</div>
+              </div>
+            </div>
+
+            <div class="authority-foot">
+              <div class="authority-proof">
+                Parents do not buy classes. They buy trust and long term results.
+              </div>
+              <button class="btn outline small" id="openApply2">Proceed to allocation</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Better scroll cue -->
+      <div class="scroll-hint">
+        Scroll for proof <span class="arrow">↓</span>
+      </div>
+    </section>
+
+    <!-- TEACHING STYLE -->
+    <section class="section" id="method">
+      <div class="wrap split reveal">
+        <div class="left">
+          <div class="kicker">Teaching Style</div>
+          <h2 class="h2">Performance is built with a system.</h2>
+          <div class="rule"></div>
+        </div>
+        <div class="right">
+          <p class="p">
+            Guitar, Piano Keys, Vocals. Teaching is based on talent level.
+            Sessions focus on tone, timing, control, confidence and stage presence.
+          </p>
+
+          <div class="trustline">
+            <span class="quote">“He corrects small mistakes and it helps a lot.”</span>
+            <span class="by">Riya, Student</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section dark-2" id="about">
+      <div class="wrap reveal">
+        <div class="kicker">About the Mentor</div>
+        <h2 class="h2">Abhishek Kumar</h2>
+        <div class="rule"></div>
+
+        <!-- NEW: premium about card -->
+        <div class="mentor-card">
+          <div class="mentor-split">
+            <div class="mentor-image">
+              <img src="assets/gallery/09-mentor.jpg" alt="Abhishek Kumar" loading="lazy">
+            </div>
+
+            <div class="mentor-copy">
+              <div class="mentor-title">
+                Founder • Abhishek Sessions
+                <span class="mentor-legacy">Formerly Musicphonetics • Est. 2016 • MSME Registered</span>
+              </div>
+
+              <p class="p lead">
+                It has been over more than a decade teaching in Delhi. What I have seen is that people usually go for a low price teacher, and later they feel stuck, lose confidence, and end up unlearning. Many teachers focus on quantity to increase monthly earnings. My target is not quantity. It is quality.
+              </p>
+
+              <p class="p lead">
+                I teach on the basis of talent, not age. Whether a three year old or fifteen year old, the system stays the same. I look to develop long term relations, and I carry discipline and standards because I come from a defence background.
+              </p>
+
+              <div class="about-grid">
+                <div class="about-box">
+                  <div class="about-box-title">Authority</div>
+                  <ul class="about-list">
+                    <li>4.8 Google rating</li>
+                    <li>10 plus years mentorship</li>
+                    <li>Choir direction and stage productions</li>
+                    <li>Institutional judging and training formats</li>
+                    <li>Professional schedule and discipline</li>
+                  </ul>
+                </div>
+
+                <div class="about-box">
+                  <div class="about-box-title">Academic and alignment</div>
+                  <ul class="about-list">
+                    <li>Delhi University</li>
+                    <li>GGSIPU</li>
+                    <li>Delhi School of Music</li>
+                    <li>Trinity framework alignment</li>
+                    <li>ABRSM framework alignment</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="trustline">
+                <span class="quote">“Met many teachers, but my communication with Abhishek suited the best. I recommended him to my colleagues.”</span>
+                <span class="by">MP, Rajya Sabha</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+      <div class="wrap reveal">
+        <div class="kicker">Gallery</div>
+        <h2 class="h2">Stage, studio, institutions.</h2>
+        <div class="rule"></div>
+
+        <div class="gallery-grid">
+          <button class="gcard" data-full="assets/gallery/01-celeb.jpg"><img src="assets/gallery/01-celeb.jpg" alt="Performance moment" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/02-openmic.jpg"><img src="assets/gallery/02-openmic.jpg" alt="Live stage" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/03-stage-guitar.jpg"><img src="assets/gallery/03-stage-guitar.jpg" alt="Stage guitar" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/04-award.jpg"><img src="assets/gallery/04-award.jpg" alt="Award and recognition" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/05-group.jpg"><img src="assets/gallery/05-group.jpg" alt="Group moment" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/06-speech.jpg"><img src="assets/gallery/06-speech.jpg" alt="Institutional talk" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/07-office.jpg"><img src="assets/gallery/07-office.jpg" alt="Institutional visit" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/08-extra.jpg"><img src="assets/gallery/08-extra.jpg" alt="Professional moment" loading="lazy"></button>
+          <button class="gcard" data-full="assets/gallery/09-mentor.jpg"><img src="assets/gallery/09-mentor.jpg" alt="Mentor" loading="lazy"></button>
+        </div>
+
+        <div class="micro-proof mt">
+          “Seeing real work builds trust faster than big claims.”
+          <span>Abhishek Sessions Principle</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <div class="lb-scrim" id="lbScrim"></div>
+      <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+      <img class="lb-img" id="lbImg" alt="Gallery image">
+    </div>
+
+    <!-- PATRON CIRCLE -->
+    <section class="section dark-2" id="patron">
+      <div class="wrap reveal">
+        <div class="kicker">Patron Circle</div>
+        <h2 class="h2">For those who want priority and polish.</h2>
+        <div class="rule"></div>
+
+        <p class="p lead">
+          25,000 onwards. By correspondence only. Designed for premium learners, private formats, and institutional requirements.
+        </p>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-title">What is included</div>
+            <div class="card-body">
+              <div class="list">
+                <div>Priority scheduling window</div>
+                <div>Monthly performance review recording</div>
+                <div>Stage rehearsal support when required</div>
+                <div>Structured check ins for faster progress</div>
+                <div>Closed jam session slots when available</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Who this is for</div>
+            <div class="card-body">
+              <div class="list">
+                <div>Premium learners with serious goals</div>
+                <div>Private formats and discreet scheduling</div>
+                <div>Institutional needs and curated outcomes</div>
+                <div>High accountability learning</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="center mt">
+          <button class="btn outline" id="openVip">Request Patron Correspondence</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section" id="reviews">
+      <div class="wrap reveal">
+        <div class="kicker">Reviews</div>
+        <h2 class="h2">Trusted by families.</h2>
+        <div class="rule"></div>
+
+        <div class="review-row">
+          <div class="review">
+            <div class="review-text">“Very good teaching. My child gained confidence.”</div>
+            <div class="review-meta">Neha, Parent</div>
+          </div>
+          <div class="review">
+            <div class="review-text">“He tells exactly what to fix. Progress is clear.”</div>
+            <div class="review-meta">Rohit, Student</div>
+          </div>
+          <div class="review">
+            <div class="review-text">“Punctual and serious teaching. Worth it.”</div>
+            <div class="review-meta">Meera, Parent</div>
+          </div>
+        </div>
+
+        <div class="micro-proof mt">
+          “Standards decide results. Not shortcuts.”
+          <span>Abhishek Sessions Principle</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section dark-2" id="faq">
+      <div class="wrap reveal">
+        <div class="kicker">FAQs</div>
+        <h2 class="h2">Clear answers.</h2>
+        <div class="rule"></div>
+
+        <div class="faq">
+          <button class="faq-q">Do you teach all age groups?</button>
+          <div class="faq-a">Yes. Teaching is based on talent level and learning speed.</div>
+
+          <button class="faq-q">What do you teach?</button>
+          <div class="faq-a">Guitar, piano keys, and vocals.</div>
+
+          <button class="faq-q">Do you teach at home?</button>
+          <div class="faq-a">Yes. Home sessions in Delhi depend on distance and feasibility.</div>
+
+          <button class="faq-q">Is online available?</button>
+          <div class="faq-a">Yes. Online one to one sessions are available.</div>
+
+          <button class="faq-q">Is fee visible on the website?</button>
+          <div class="faq-a">No. Fees are shown only at the final stage after details.</div>
+
+          <button class="faq-q">Is there a trial?</button>
+          <div class="faq-a">Yes. Trial is available. Details are shared after your request.</div>
+
+          <button class="faq-q">Patron Circle?</button>
+          <div class="faq-a">Yes. 25,000 onwards. This is for priority and polish.</div>
+
+          <button class="faq-q">How fast will I improve?</button>
+          <div class="faq-a">With discipline, results come fast. The system is structured.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA -->
+    <section class="section" id="media">
+      <div class="wrap reveal">
+        <div class="kicker">Media</div>
+        <h2 class="h2">Studio and stage.</h2>
+        <div class="rule"></div>
+
+        <div class="media-links">
+          <a class="chip" href="https://instagram.com/abhisheksessions" target="_blank" rel="noopener">Instagram @abhisheksessions</a>
+          <a class="chip" href="https://youtube.com/@abhisheksessions" target="_blank" rel="noopener">YouTube @abhisheksessions</a>
+        </div>
+
+        <div class="insta-iframe-grid mt">
+          <div class="ig-card"><iframe src="https://www.instagram.com/reel/DQ8n7Y0kmRm/embed" allowfullscreen scrolling="no"></iframe></div>
+          <div class="ig-card"><iframe src="https://www.instagram.com/reel/DRBhFthkuP1/embed" allowfullscreen scrolling="no"></iframe></div>
+          <div class="ig-card"><iframe src="https://www.instagram.com/reel/DRZ0fBJEhip/embed" allowfullscreen scrolling="no"></iframe></div>
+          <div class="ig-card"><iframe src="https://www.instagram.com/reel/DQ_HL1iklp8/embed" allowfullscreen scrolling="no"></iframe></div>
+          <div class="ig-card"><iframe src="https://www.instagram.com/reel/DRd68nHktWm/embed" allowfullscreen scrolling="no"></iframe></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section dark-2" id="contact">
+      <div class="wrap reveal">
+        <div class="kicker">Get in Touch</div>
+        <h2 class="h2">Direct WhatsApp.</h2>
+        <div class="rule"></div>
+
+        <div class="micro-proof mt">
+          “If you are serious, message once. We will guide the process clearly.”
+          <span>Abhishek Sessions Principle</span>
+        </div>
+
+        <div class="center mt">
+          <a class="btn outline" href="https://wa.me/917011328912" target="_blank" rel="noopener">WhatsApp now</a>
+        </div>
+
+        <div class="micro mt">
+          South Delhi. Delhi Cantt. Online format available.
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer-line">
+      Abhishek Sessions. Formerly Musicphonetics. Established 2016. MSME Registered. 4.8 Google rating.
+    </footer>
+
+  </main>
+
+  <!-- APPLY MODAL -->
+  <div class="modal" id="applyModal" aria-hidden="true">
+    <div class="modal-scrim" id="applyScrim"></div>
+
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="applyTitle">
+      <div class="modal-top">
+        <div class="modal-title" id="applyTitle">Private Consideration</div>
+        <button class="modal-x" id="applyClose" aria-label="Close">✕</button>
+      </div>
+
+      <div class="stepper">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+        <div class="step-dot" id="dot4"></div>
+        <div class="step-dot" id="dot5"></div>
+      </div>
+
+      <div class="form-proof" id="formProof">
+        Better training costs more. Unlearning costs even more.
+        <span>Abhishek Sessions Principle</span>
+      </div>
+
+      <div class="step-area">
+        <!-- Step 1 -->
+        <div class="step active" id="step1">
+          <div class="step-kicker">Step 1 of 5</div>
+          <div class="step-h">Your name and phone</div>
+
+          <input class="input" id="fullName" type="text" placeholder="Full name" autocomplete="name" />
+          <input class="input" id="phone" type="tel" placeholder="Phone number" inputmode="tel" autocomplete="tel" />
+
+          <div class="tiny mt8">We use this only to reply on WhatsApp.</div>
+
+          <div class="step-actions">
+            <button class="btn primary" id="next1">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step2">
+          <div class="step-kicker">Step 2 of 5</div>
+          <div class="step-h">Your location</div>
+
+          <input class="input" id="location" type="text" placeholder="Area or locality" autocomplete="off" />
+
+          <div class="hint">Suggestions</div>
+          <div class="suggestions" id="suggestions">
+            <button class="sug" data-val="Delhi Cantt" data-pin="110010" data-zone="cantd">Delhi Cantt 110010</button>
+            <button class="sug" data-val="Chanakyapuri" data-zone="near">Chanakyapuri</button>
+            <button class="sug" data-val="Vasant Vihar" data-zone="near">Vasant Vihar</button>
+            <button class="sug" data-val="South Delhi" data-zone="near">South Delhi</button>
+            <button class="sug" data-val="Dwarka" data-zone="far">Dwarka</button>
+          </div>
+
+          <div class="hint mt8">Pincode (recommended)</div>
+          <input class="input" id="pincode" type="text" inputmode="numeric" placeholder="110010" maxlength="6" />
+
+          <div class="step-actions">
+            <button class="btn ghost" id="back2">Back</button>
+            <button class="btn primary" id="next2">Next</button>
+          </div>
+
+          <div class="tiny mt12">Final distance is verified on WhatsApp.</div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step3">
+          <div class="step-kicker">Step 3 of 5</div>
+          <div class="step-h">What do you want to learn?</div>
+
+          <div class="tiles" id="instrumentTiles">
+            <button class="tile" data-val="Guitar">Guitar</button>
+            <button class="tile" data-val="Piano Keys">Piano Keys</button>
+            <button class="tile" data-val="Vocal">Vocal</button>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn ghost" id="back3">Back</button>
+            <button class="btn primary" id="next3">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step4">
+          <div class="step-kicker">Step 4 of 5</div>
+          <div class="step-h">Choose session format</div>
+
+          <div class="tiles" id="formatTiles">
+            <button class="tile" data-val="Home">Home</button>
+            <button class="tile" data-val="Online">Online</button>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn ghost" id="back4">Back</button>
+            <button class="btn primary" id="next4">Proceed</button>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step" id="step5">
+          <div class="step-kicker">Step 5 of 5</div>
+          <div class="step-h">Final details</div>
+
+          <div class="review-card">
+            <div class="rc-title">Program structure</div>
+            <div class="rc-list">
+              <div>60 minute private session</div>
+              <div>Two sessions per week</div>
+              <div>Structured plan and clear goals</div>
+              <div>Home or online available</div>
+            </div>
+          </div>
+
+          <div class="review-card">
+            <div class="rc-title">Program investment</div>
+            <div class="rc-list" id="investmentBox"></div>
+            <div class="rc-note" id="pricingNote"></div>
+          </div>
+
+          <div class="final-psycho">
+            You are not buying classes. You are buying confidence.
+            <span class="by">Abhishek Sessions Principle</span>
+          </div>
+
+          <div class="policy-row">
+            <button class="linklike" id="openPolicies">Read terms</button>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn ghost" id="back5">Back</button>
+            <button class="btn primary" id="confirmWhatsApp">Confirm on WhatsApp</button>
+          </div>
+
+          <div class="tiny mt12">Fees are shown only at this final step.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- POLICIES MODAL -->
+  <div class="modal" id="policyModal" aria-hidden="true">
+    <div class="modal-scrim" id="policyScrim"></div>
+    <div class="modal-card small" role="dialog" aria-modal="true" aria-labelledby="policyTitle">
+      <div class="modal-top">
+        <div class="modal-title" id="policyTitle">Terms</div>
+        <button class="modal-x" id="policyClose" aria-label="Close">✕</button>
+      </div>
+
+      <div class="policy-body">
+        <div class="policy-line">Allocation is limited and confirmed only after WhatsApp.</div>
+        <div class="policy-line">Home sessions depend on distance and feasibility.</div>
+        <div class="policy-line">Payments are taken in advance for confirmed slots.</div>
+        <div class="policy-line">Reschedule needs minimum 6 hours notice when possible.</div>
+        <div class="policy-line">Professional conduct is required for institutional work.</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

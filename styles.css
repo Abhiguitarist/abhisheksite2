@@ -366,25 +366,48 @@ button{font-family:inherit}
   background:rgba(255,255,255,.02);
   padding:16px;
 }
+/* --- ABOUT: make photo height match the right box perfectly --- */
+
 .mentor-split{
-  display:grid;
+  display: grid;
   grid-template-columns: 0.9fr 1.1fr;
-  gap:18px;
-  align-items:start;
+  gap: 18px;
+
+  /* IMPORTANT: this makes both columns equal height */
+  align-items: stretch;
 }
+
 .mentor-image{
-  border-radius:22px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.02);
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
   box-shadow: 0 18px 55px rgba(0,0,0,.45);
+
+  /* IMPORTANT: allow it to stretch full column height */
+  height: 100%;
+  min-height: 520px; /* keeps it premium even if right side is short */
 }
+
 .mentor-image img{
-  width:100%;
-  height:auto;
-  max-height:520px;
-  object-fit:contain;
-  object-position:center top;
+  width: 100%;
+  height: 100%;
+
+  /* IMPORTANT: no distortion + fills nicely */
+  object-fit: cover;
+  object-position: center top;
+
+  display: block;
+}
+
+/* Mobile: stack layout, image should not become too tall */
+@media (max-width: 820px){
+  .mentor-split{
+    grid-template-columns: 1fr;
+  }
+  .mentor-image{
+    min-height: 360px;
+  }
 }
 .mentor-title{
   font-weight:800;

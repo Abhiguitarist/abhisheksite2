@@ -2,7 +2,7 @@ name: Daily Blog Generator
 
 on:
   schedule:
-    - cron: "0 3 * * *" # daily
+    - cron: "0 3 * * *" # daily (UTC). India time ~ 8:30 AM
   workflow_dispatch:
 
 permissions:
@@ -15,67 +15,154 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Generate blog post + index.json
+      - name: Generate blog post + update index.json
         run: |
           set -e
-          DATE=$(date +'%Y-%m-%d')
-          mkdir -p blog
-          FILE="blog/post-$DATE.md"
 
-          # Create today's post only if it doesn't already exist
+          mkdir -p blog
+
+          DATE=$(date +'%Y-%m-%d')
+
+          # Rotate topics by day (1-10)
+          DAY_INDEX=$(( (10#$(date +'%d') - 1) % 10 ))
+
+          TITLES=(
+            "How to Choose the Best Guitar Teacher (Avoid These 5 Mistakes)"
+            "Best Guitar for Beginners in India (Complete Buying Guide)"
+            "Guitar String Guide: Which Strings Are Best for Beginners?"
+            "10 Easy Guitar Songs Every Beginner Should Learn"
+            "Guitar Pick Sizes Explained (Most Beginners Use the Wrong One)"
+            "What is a Chord Family? (Secret Behind Most Songs)"
+            "How to Learn Guitar Faster (Practice Routine That Works)"
+            "Why Many Guitar Students Quit (And How to Avoid It)"
+            "Top 10 Viral Guitar Songs Everyone Loves Playing"
+            "Acoustic vs Electric Guitar: Which One Should You Learn First?"
+          )
+
+          SLUGS=(
+            "best-guitar-teacher"
+            "best-guitar-for-beginners-india"
+            "best-guitar-strings-for-beginners"
+            "easy-guitar-songs-for-beginners"
+            "best-guitar-pick-for-beginners"
+            "guitar-chord-family-explained"
+            "learn-guitar-faster-practice-routine"
+            "why-guitar-students-quit"
+            "viral-guitar-songs"
+            "acoustic-vs-electric-guitar"
+          )
+
+          EXCERPTS=(
+            "A simple checklist to pick the right mentor and avoid wasting months."
+            "A practical buying guide for choosing your first guitar in India."
+            "Gauge, feel, and what beginners should actually buy."
+            "Starter-friendly songs to build confidence and rhythm."
+            "Pick thickness affects tone and control—choose correctly."
+            "Understand chord families and why songs feel easy after this."
+            "A daily routine that makes progress visible in weeks."
+            "The real reasons people quit—and how to stay consistent."
+            "Trending songs that sound great on acoustic and reels."
+            "Which one to start with, based on goals and budget."
+          )
+
+          TITLE="${TITLES[$DAY_INDEX]}"
+          SLUG="${SLUGS[$DAY_INDEX]}"
+          EXCERPT="${EXCERPTS[$DAY_INDEX]}"
+
+          FILE="blog/${DATE}-${SLUG}.md"
+
+          # Create the post only if it doesn't exist already
           if [ ! -f "$FILE" ]; then
-            echo "# Guitar Tip ($DATE)" > "$FILE"
-            echo "" >> "$FILE"
-            echo "Practice C – G – Am – F chord progression for 10 minutes today." >> "$FILE"
-            echo "" >> "$FILE"
-            echo "Learn guitar with **Abhishek Sessions**." >> "$FILE"
+            cat > "$FILE" <<EOF
+          ---
+          title: "$TITLE"
+          date: "$DATE"
+          slug: "$SLUG"
+          excerpt: "$EXCERPT"
+          keywords: "guitar, guitar lessons, beginner guitar, guitar practice, Abhishek Sessions"
+          ---
+
+          ## $TITLE
+
+          $EXCERPT
+
+          ### What you should do today
+          - Practice 10 minutes with a metronome (slow and clean).
+          - Focus on accuracy first, speed later.
+          - Record 20 seconds and listen for timing mistakes.
+
+          ### Quick tip
+          Most beginners don’t fail because of talent. They fail because they practice without a system.
+
+          ### Want structured progress?
+          **Abhishek Sessions** offers private one-to-one guitar mentorship across Delhi and online.  
+          Learn with a clear plan, discipline, and performance confidence.
+          EOF
           fi
 
-          # Build blog/index.json from all blog/*.md
-          python3 - << 'PY'
-          import glob, json, os, re
+          # Build blog/index.json for your blog page
+          python3 - <<'PY'
+          import os, json, re
+          from datetime import datetime
 
+          blog_dir = "blog"
           posts = []
-          for path in sorted(glob.glob("blog/*.md"), reverse=True):
-            name = os.path.basename(path)
-            m = re.match(r"post-(\d{4}-\d{2}-\d{2})\.md$", name)
-            date = m.group(1) if m else ""
+          for fn in os.listdir(blog_dir):
+              if not fn.endswith(".md"): 
+                  continue
+              path = os.path.join(blog_dir, fn)
+              with open(path, "r", encoding="utf-8") as f:
+                  txt = f.read()
 
-            with open(path, "r", encoding="utf-8") as f:
-              lines = [l.rstrip("\n") for l in f.readlines()]
+              # Read frontmatter
+              m = re.search(r"^---\s*(.*?)\s*---", txt, re.S | re.M)
+              meta = {}
+              if m:
+                  fm = m.group(1).splitlines()
+                  for line in fm:
+                      if ":" in line:
+                          k,v = line.split(":",1)
+                          meta[k.strip()] = v.strip().strip('"')
 
-            title = "Untitled"
-            for l in lines:
-              if l.strip().startswith("# "):
-                title = l.strip()[2:].strip()
-                break
+              title = meta.get("title","")
+              date = meta.get("date","")
+              slug = meta.get("slug","")
+              excerpt = meta.get("excerpt","")
 
-            body_lines = [l.strip() for l in lines if l.strip() and not l.strip().startswith("#")]
-            excerpt = " ".join(body_lines)[:160]
+              # URL of the md file on site
+              url = f"/{blog_dir}/{fn}"
 
-            posts.append({
-              "title": title,
-              "date": date,
-              "url": f"/blog/{name}",
-              "file": name,
-              "excerpt": excerpt
-            })
+              posts.append({
+                  "title": title,
+                  "date": date,
+                  "slug": slug,
+                  "excerpt": excerpt,
+                  "url": url
+              })
 
-          os.makedirs("blog", exist_ok=True)
-          with open("blog/index.json", "w", encoding="utf-8") as out:
-            json.dump(posts, out, ensure_ascii=False, indent=2)
+          # sort by date desc
+          def parse(d):
+              try:
+                  return datetime.strptime(d, "%Y-%m-%d")
+              except:
+                  return datetime.min
+
+          posts.sort(key=lambda x: parse(x.get("date","")), reverse=True)
+
+          out = {"posts": posts}
+          with open(os.path.join(blog_dir,"index.json"), "w", encoding="utf-8") as f:
+              json.dump(out, f, ensure_ascii=False, indent=2)
           PY
 
-      - name: Commit and push
+      - name: Commit and Push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
-          git pull --rebase origin main
-
           git add blog
-          git commit -m "Auto blog update $(date +'%Y-%m-%d')" || echo "No changes to commit"
-          git push origin main
+
+          git commit -m "Auto blog post $(date +'%Y-%m-%d')" || echo "No changes to commit"
+
+          git pull --rebase
+          git push

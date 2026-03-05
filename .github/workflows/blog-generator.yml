@@ -2,26 +2,26 @@ name: Daily Blog Generator
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # runs daily
+    - cron: "0 3 * * *"
   workflow_dispatch:
-  
-  permissions:
-    contents: write
+
+permissions:
+  contents: write
 
 jobs:
   generate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          persist-credentials: true
 
-      - name: Create post
+      - name: Generate blog post
         run: |
           DATE=$(date +'%Y-%m-%d')
           FILE="blog/post-$DATE.md"
+
+          mkdir -p blog
 
           echo "# Guitar Tip ($DATE)" > $FILE
           echo "" >> $FILE
@@ -29,12 +29,14 @@ jobs:
           echo "" >> $FILE
           echo "Learn guitar with **Abhishek Sessions**." >> $FILE
 
-      - name: Commit & Push
+      - name: Commit and Push
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add blog
-          git commit -m "Auto blog post $(date +'%Y-%m-%d')" || echo "No changes"
-          git pull --rebase
-git push
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
 
+          git pull --rebase
+
+          git add blog
+          git commit -m "Auto blog post $DATE" || echo "No changes to commit"
+
+          git push

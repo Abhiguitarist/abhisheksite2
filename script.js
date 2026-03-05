@@ -392,3 +392,32 @@ $("confirmWhatsApp")?.addEventListener("click", async ()=>{
 });
 
 $("openVip")?.addEventListener("click", showApply);
+(async function loadBlogPreview(){
+  const grid = document.getElementById("blogPreviewGrid");
+  if(!grid) return;
+
+  try{
+    const res = await fetch("/blog/index.json", { cache: "no-store" });
+    if(!res.ok) throw new Error("index.json not found");
+    const posts = await res.json();
+
+    const top = posts.slice(0,3);
+    grid.innerHTML = top.map((p, i) => `
+      <article class="blog-preview-card">
+        <div class="tag">New • ${p.date || "Update"}</div>
+        <h3><a href="/post.html?f=${encodeURIComponent(p.file)}">${p.title}</a></h3>
+        <p>${p.excerpt || "Practical tips, simple explanations and pro guidance."}</p>
+        <a class="read" href="/post.html?f=${encodeURIComponent(p.file)}">Read →</a>
+      </article>
+    `).join("");
+  }catch(e){
+    grid.innerHTML = `
+      <article class="blog-preview-card">
+        <div class="tag">Insights</div>
+        <h3><a href="/blog.html">Open blog</a></h3>
+        <p>Your blog is live. Auto posts will appear here as they publish.</p>
+        <a class="read" href="/blog.html">View →</a>
+      </article>
+    `;
+  }
+})();

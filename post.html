@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Post | Abhishek Sessions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0b0b0f;--text:#e9e9ee;--muted:#b8b8c6;--gold:#d4af37;--line:rgba(212,175,55,.22);}
+    body{margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text);}
+    .wrap{max-width:900px;margin:0 auto;padding:22px 16px 70px;}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;}
+    a.btn{color:#0b0b0f;background:linear-gradient(180deg,#f2d27a,var(--gold));padding:10px 14px;border-radius:12px;font-weight:800;text-decoration:none;}
+    .card{border:1px solid var(--line);border-radius:18px;background:rgba(18,18,26,.55);padding:18px;}
+    .meta{color:var(--muted);font-size:12px;margin-top:8px;}
+    .content{line-height:1.75;font-size:16px;}
+    .content h1,.content h2,.content h3{line-height:1.25}
+    .content a{color:var(--gold)}
+    code,pre{background:rgba(255,255,255,.06);border-radius:10px}
+    pre{padding:12px;overflow:auto}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="btn" href="/blog.html">← Back to Blog</a>
+      <a class="btn" href="/">Website</a>
+    </div>
+
+    <div class="card">
+      <div id="title" style="font-weight:900;font-size:20px;">Loading…</div>
+      <div class="meta" id="meta"></div>
+      <hr style="border:0;border-top:1px solid rgba(212,175,55,.18);margin:14px 0;">
+      <div class="content" id="content"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    (async function(){
+      const params = new URLSearchParams(location.search);
+      const f = params.get("f");
+      if(!f){ document.getElementById("title").textContent="Post not found"; return; }
+
+      const res = await fetch("/" + f, { cache:"no-store" });
+      const md = await res.text();
+
+      // Title = first heading, fallback
+      const firstLine = (md.split("\n").find(l => l.trim().length) || "").trim();
+      const title = firstLine.startsWith("#") ? firstLine.replace(/^#+\s*/,"") : "Abhishek Sessions Insight";
+
+      document.getElementById("title").textContent = title;
+      document.getElementById("meta").textContent = f.replace("blog/","").replace(".md","");
+
+      // Render markdown
+      document.getElementById("content").innerHTML = marked.parse(md);
+    })();
+  </script>
+</body>
+</html>

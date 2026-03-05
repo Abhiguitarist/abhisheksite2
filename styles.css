@@ -381,9 +381,9 @@ button{font-family:inherit}
 }
 .mentor-image img{
   width:100%;
-  height:100%;
+  height:auto;
   max-height:520px;
-  object-fit:cover;
+  object-fit:contain;
   object-position:center top;
 }
 .mentor-title{

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Shop | Abhishek Sessions</title>
+  <style>
+    :root{
+      --bg:#0b0b0f; --card:#12121a; --text:#e9e9ee; --muted:#b8b8c6;
+      --gold:#d4af37; --line:rgba(212,175,55,.22);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1200px;margin:0 auto;padding:18px 14px 64px}
+    .top{
+      display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      position:sticky; top:0; z-index:10; padding:14px 10px; background:rgba(11,11,15,.92);
+      border-bottom:1px solid rgba(255,255,255,.06); backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .mark{width:40px;height:40px;border-radius:14px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold);font-weight:900;background:rgba(212,175,55,.06)}
+    .brand b{letter-spacing:.6px}
+    .search{
+      flex:1; min-width:240px; display:flex; gap:10px; align-items:center;
+      border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04);
+      border-radius:14px; padding:10px 12px;
+    }
+    .search input{
+      width:100%; background:transparent; border:0; outline:none; color:var(--text); font-size:14px;
+    }
+    .pillrow{display:flex; gap:8px; flex-wrap:wrap}
+    .pill{
+      cursor:pointer; user-select:none;
+      border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.03);
+      padding:8px 10px; border-radius:999px; font-size:13px; color:var(--muted);
+    }
+    .pill.active{border-color:var(--line); color:var(--gold); background:rgba(212,175,55,.06); font-weight:700}
+    .grid{
+      margin-top:16px;
+      display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px;
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      border-radius:18px; overflow:hidden;
+    }
+    .img{
+      aspect-ratio: 4/3;
+      background: rgba(255,255,255,.03);
+      display:grid; place-items:center;
+    }
+    .img img{width:100%;height:100%;object-fit:cover;display:block}
+    .cbody{padding:12px}
+    .tag{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid var(--line);color:var(--gold);font-size:12px;font-weight:800;background:rgba(212,175,55,.06)}
+    .title{margin:10px 0 6px;font-size:15px;line-height:1.25;font-weight:800}
+    .meta{margin:0;color:var(--muted);font-size:12px;line-height:1.4}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+    .btn{
+      text-decoration:none; color:#0b0b0f;
+      background:linear-gradient(180deg,#f2d27a,var(--gold));
+      padding:9px 10px; border-radius:12px; font-weight:900; font-size:13px;
+      border:1px solid rgba(0,0,0,.25); white-space:nowrap;
+    }
+    .ghost{color:var(--gold);text-decoration:none;font-weight:800;font-size:13px}
+    @media (max-width:1100px){ .grid{grid-template-columns:repeat(3,1fr)} }
+    @media (max-width:780px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:480px){ .grid{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="mark">AS</div>
+        <div>
+          <b>ABHISHEK SESSIONS</b><div style="color:rgba(255,255,255,.6);font-size:12px">Market • Curated Instruments</div>
+        </div>
+      </div>
+
+      <div class="search">
+        <span style="color:rgba(255,255,255,.55)">🔎</span>
+        <input id="q" placeholder="Search guitars, keyboards, strings…" />
+      </div>
+
+      <div class="pillrow" id="filters">
+        <div class="pill active" data-cat="all">All</div>
+        <div class="pill" data-cat="guitars">Guitars</div>
+        <div class="pill" data-cat="keyboards">Keyboards</div>
+        <a class="pill" href="/" style="text-decoration:none;">Back</a>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <script>
+    const grid = document.getElementById("grid");
+    const q = document.getElementById("q");
+    const filters = document.getElementById("filters");
+    let all = [];
+    let activeCat = "all";
+
+    function card(p){
+      const img = (p.images && p.images[0]) ? p.images[0] : "";
+      const badge = (p.tags && p.tags[0]) ? p.tags[0] : "Curated";
+      return `
+        <div class="card">
+          <div class="img">${img ? `<img src="${img}" alt="${p.name}">` : "Image"}</div>
+          <div class="cbody">
+            <div class="tag">${badge}</div>
+            <div class="title">${p.name}</div>
+            <p class="meta">${p.price_note || ""}</p>
+            <div class="row">
+              <a class="btn" href="/product.html?slug=${encodeURIComponent(p.slug)}">View</a>
+              <a class="ghost" href="/product.html?slug=${encodeURIComponent(p.slug)}">Details →</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function render(){
+      const query = (q.value || "").toLowerCase().trim();
+      const list = all.filter(p => {
+        const matchesCat = (activeCat === "all") || (p.category === activeCat);
+        const blob = `${p.name} ${(p.tags||[]).join(" ")} ${(p.description||"")}`.toLowerCase();
+        const matchesQ = !query || blob.includes(query);
+        return matchesCat && matchesQ;
+      });
+
+      grid.innerHTML = list.map(card).join("") || `<div style="color:rgba(255,255,255,.65)">No items found.</div>`;
+    }
+
+    filters.addEventListener("click", (e) => {
+      const pill = e.target.closest(".pill");
+      if(!pill || !pill.dataset.cat) return;
+      activeCat = pill.dataset.cat;
+      [...filters.querySelectorAll(".pill")].forEach(x => x.classList.remove("active"));
+      pill.classList.add("active");
+      render();
+    });
+
+    q.addEventListener("input", render);
+
+    (async function(){
+      const res = await fetch("/data/products.json", {cache:"no-store"});
+      const data = await res.json();
+      all = data.products || [];
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -68,11 +68,7 @@
     .card h3{margin:6px 0 6px;font-size:18px}
     .meta{color:var(--muted);font-size:12px;margin:0 0 12px}
     .card a{color:var(--text);text-decoration:none}
-    .read{
-      display:inline-flex;align-items:center;gap:8px;
-      color:var(--gold);font-weight:700;font-size:13px;
-    }
-    .read span{opacity:.9}
+    .read{display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-weight:700;font-size:13px}
     footer{margin-top:28px;color:var(--muted);font-size:12px;opacity:.9}
     @media (max-width:720px){
       .grid{grid-template-columns:1fr}
@@ -96,25 +92,11 @@
     <section class="hero">
       <h2>Abhishek Sessions Blog</h2>
       <p class="sub">
-        Short, practical insights on learning music — guitar techniques, piano skills, practice routines,
+        Short, practical insights on learning music — guitar technique, piano skills, practice routines,
         and stage confidence. Updated regularly.
       </p>
 
-      <div class="grid">
-        <article class="card">
-          <div class="tag">New • Foundation</div>
-          <h3><a href="/blog/first-post.md">Welcome to Abhishek Sessions Blog</a></h3>
-          <p class="meta">Start here — what this blog will cover and how it helps your music journey.</p>
-          <a class="read" href="/blog/first-post.md"><span>Read article</span> →</a>
-        </article>
-
-        <article class="card">
-          <div class="tag">Next • Coming Soon</div>
-          <h3>Guitar Basics in 7 Days</h3>
-          <p class="meta">A beginner-friendly roadmap (post coming soon).</p>
-          <span class="read"><span>Publishing shortly</span> →</span>
-        </article>
-      </div>
+      <div class="grid" id="blogGrid"></div>
     </section>
 
     <footer>
@@ -124,6 +106,31 @@
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    (async function(){
+      const grid = document.getElementById("blogGrid");
+      try{
+        const res = await fetch("/blog/index.json", { cache: "no-store" });
+        const posts = await res.json();
+
+        grid.innerHTML = posts.map(p => `
+          <article class="card">
+            <div class="tag">Latest • ${p.date || "Update"}</div>
+            <h3><a href="/post.html?f=${encodeURIComponent(p.file)}">${p.title}</a></h3>
+            <p class="meta">${p.excerpt || "Practical tip for your music journey."}</p>
+            <a class="read" href="/post.html?f=${encodeURIComponent(p.file)}"><span>Read article</span> →</a>
+          </article>
+        `).join("");
+      }catch(e){
+        grid.innerHTML = `
+          <article class="card">
+            <div class="tag">Setup</div>
+            <h3>Blog index not found</h3>
+            <p class="meta">Your action must generate /blog/index.json. Once created, posts will appear here automatically.</p>
+          </article>
+        `;
+      }
+    })();
   </script>
 </body>
 </html>

@@ -1,0 +1,49 @@
+{
+  "products": [
+    {
+      "id": "AS-GTR-YAM-F310",
+      "slug": "yamaha-f310",
+      "name": "Yamaha F310 (Acoustic Guitar)",
+      "category": "guitars",
+      "tags": ["Beginner", "Best Seller", "Abhishek Pick"],
+      "price_note": "Best under ₹12k–₹15k (varies by stock)",
+      "images": [
+        "assets/shop/yamaha-f310/1.jpg",
+        "assets/shop/yamaha-f310/2.jpg",
+        "assets/shop/yamaha-f310/3.jpg"
+      ],
+      "highlights": [
+        "Reliable beginner tone",
+        "Comfortable neck",
+        "Great resale value"
+      ],
+      "description": "A safe first guitar if you want clean chords, good tuning stability and long-term reliability.",
+      "fulfillment": {
+        "partner": "Bhatia Musicals",
+        "locations": ["Lodhi", "Galleria Gurgaon"]
+      }
+    },
+    {
+      "id": "AS-KEY-CAS-CTX700",
+      "slug": "casio-ctx-700",
+      "name": "Casio CT-X700 (Keyboard)",
+      "category": "keyboards",
+      "tags": ["Beginner", "Value"],
+      "price_note": "Best under ₹9k–₹12k (varies by stock)",
+      "images": [
+        "assets/shop/casio-ctx700/1.jpg",
+        "assets/shop/casio-ctx700/2.jpg"
+      ],
+      "highlights": [
+        "Good beginner sounds",
+        "Portable and practical",
+        "Solid learning keyboard"
+      ],
+      "description": "Great for beginners starting chords + melody. Works well for practice and basic performance.",
+      "fulfillment": {
+        "partner": "Bhatia Musicals",
+        "locations": ["Lodhi", "Galleria Gurgaon"]
+      }
+    }
+  ]
+}

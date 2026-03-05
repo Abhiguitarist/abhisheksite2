@@ -1,0 +1,30 @@
+name: Daily Blog Generator
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # daily
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create post
+        run: |
+          DATE=$(date +'%Y-%m-%d')
+          FILE="blog/post-$DATE.md"
+          echo "# Daily Music Tip ($DATE)" > $FILE
+          echo "" >> $FILE
+          echo "Practice C–G–Am–F for 10 minutes today." >> $FILE
+          echo "" >> $FILE
+          echo "**Abhishek Sessions** — Book a session." >> $FILE
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add blog
+          git commit -m "Auto: daily blog post" || exit 0
+          git push

@@ -2,7 +2,7 @@ name: Daily Blog Generator
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # daily 03:00 UTC
+    - cron: "0 3 * * *" # daily
   workflow_dispatch:
 
 permissions:
@@ -17,87 +17,65 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          persist-credentials: true
 
-      - name: Set date
-        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-
-      - name: Generate blog post
+      - name: Generate blog post + index.json
         run: |
+          set -e
+          DATE=$(date +'%Y-%m-%d')
           mkdir -p blog
-          FILE="blog/post-${DATE}.md"
+          FILE="blog/post-$DATE.md"
 
-          echo "# Guitar Tip (${DATE})" > "$FILE"
-          echo "" >> "$FILE"
-          echo "Practice C – G – Am – F chord progression for 10 minutes today." >> "$FILE"
-          echo "" >> "$FILE"
-          echo "Learn guitar with **Abhishek Sessions**." >> "$FILE"
+          # Create today's post only if it doesn't already exist
+          if [ ! -f "$FILE" ]; then
+            echo "# Guitar Tip ($DATE)" > "$FILE"
+            echo "" >> "$FILE"
+            echo "Practice C – G – Am – F chord progression for 10 minutes today." >> "$FILE"
+            echo "" >> "$FILE"
+            echo "Learn guitar with **Abhishek Sessions**." >> "$FILE"
+          fi
 
-      - name: Build blog index.json
-        run: |
+          # Build blog/index.json from all blog/*.md
           python3 - << 'PY'
-          import os, json, glob, re
-
-          def read_md_title_and_excerpt(path):
-            title = "Abhishek Sessions Insight"
-            excerpt = ""
-            try:
-              with open(path, "r", encoding="utf-8") as f:
-                lines = [l.rstrip("\n") for l in f.readlines()]
-              # title = first markdown heading
-              for l in lines:
-                s = l.strip()
-                if s.startswith("#"):
-                  title = re.sub(r"^#+\s*", "", s).strip() or title
-                  break
-              # excerpt = first non-empty line after title
-              found_title = False
-              for l in lines:
-                s = l.strip()
-                if not found_title:
-                  if s.startswith("#"):
-                    found_title = True
-                  continue
-                if s:
-                  excerpt = s
-                  break
-            except:
-              pass
-            return title, excerpt
+          import glob, json, os, re
 
           posts = []
-          for path in sorted(glob.glob("blog/*.md")):
-            fname = os.path.basename(path)
-            # expected: post-YYYY-MM-DD.md
-            m = re.match(r"post-(\d{4}-\d{2}-\d{2})\.md$", fname)
+          for path in sorted(glob.glob("blog/*.md"), reverse=True):
+            name = os.path.basename(path)
+            m = re.match(r"post-(\d{4}-\d{2}-\d{2})\.md$", name)
             date = m.group(1) if m else ""
-            title, excerpt = read_md_title_and_excerpt(path)
+
+            with open(path, "r", encoding="utf-8") as f:
+              lines = [l.rstrip("\n") for l in f.readlines()]
+
+            title = "Untitled"
+            for l in lines:
+              if l.strip().startswith("# "):
+                title = l.strip()[2:].strip()
+                break
+
+            body_lines = [l.strip() for l in lines if l.strip() and not l.strip().startswith("#")]
+            excerpt = " ".join(body_lines)[:160]
+
             posts.append({
-              "file": f"blog/{fname}",
-              "date": date,
               "title": title,
-              "excerpt": excerpt[:160]
+              "date": date,
+              "url": f"/blog/{name}",
+              "file": name,
+              "excerpt": excerpt
             })
 
-          # newest first (by date string)
-          posts.sort(key=lambda x: x.get("date",""), reverse=True)
-
           os.makedirs("blog", exist_ok=True)
-          with open("blog/index.json", "w", encoding="utf-8") as f:
-            json.dump(posts, f, ensure_ascii=False, indent=2)
-
-          print(f"index.json generated with {len(posts)} posts")
+          with open("blog/index.json", "w", encoding="utf-8") as out:
+            json.dump(posts, out, ensure_ascii=False, indent=2)
           PY
 
-      - name: Commit and Push
+      - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
-          # sync first to avoid non-fast-forward
           git pull --rebase origin main
 
           git add blog
-          git commit -m "Auto blog post ${DATE}" || echo "No changes to commit"
-
+          git commit -m "Auto blog update $(date +'%Y-%m-%d')" || echo "No changes to commit"
           git push origin main

@@ -545,39 +545,51 @@
     }
 
     function parseFrontMatter(text){
-      const lines = text.split("\n");
-      const meta = {
-        title: "",
-        date: "",
-        slug: "",
-        excerpt: "",
-        keywords: "",
-        image: ""
-      };
+  const lines = text.split("\n");
+  const meta = {
+    title: "",
+    date: "",
+    slug: "",
+    excerpt: "",
+    keywords: "",
+    image: ""
+  };
 
-      let contentStart = 0;
+  let i = 0;
 
-      for(let i = 0; i < lines.length; i++){
-        const line = lines[i].trim();
+  while(i < lines.length){
+    const line = lines[i].trim();
 
-        if(!line){
-          contentStart = i + 1;
-          break;
-        }
-
-        const match = line.match(/^([a-zA-Z]+):\s*"(.*)"$/);
-        if(match){
-          const key = match[1].toLowerCase();
-          const value = match[2];
-          if(key in meta) meta[key] = value;
-        }
-      }
-
-      return {
-        meta,
-        content: lines.slice(contentStart).join("\n").trim()
-      };
+    if(!line){
+      i++;
+      break;
     }
+
+    if(line === "---"){
+      i++;
+      break;
+    }
+
+    const match = line.match(/^([a-zA-Z]+):\s*"(.*)"$/);
+    if(match){
+      const key = match[1].toLowerCase();
+      const value = match[2];
+      if(key in meta) meta[key] = value;
+      i++;
+      continue;
+    }
+
+    break;
+  }
+
+  let content = lines.slice(i).join("\n").trim();
+
+  if(content.startsWith("---")){
+    content = content.replace(/^---\s*/, "");
+  }
+
+  return { meta, content };
+}
 
     function markdownToHtml(md){
       const lines = md.split("\n");

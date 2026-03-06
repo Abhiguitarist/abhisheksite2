@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Generate blog post and rebuild index.json
+      - name: Generate premium blog post and rebuild index.json
         run: |
           python << 'PY'
           import os
@@ -37,52 +37,232 @@ jobs:
               {
                   "title": "How to Choose the Best Guitar Teacher (Avoid These 5 Mistakes)",
                   "slug": "best-guitar-teacher",
-                  "excerpt": "A simple checklist to pick the right mentor and avoid wasting months."
+                  "excerpt": "A clear checklist to choose the right mentor and avoid wasting months on poor training.",
+                  "keywords": "best guitar teacher, guitar teacher in delhi, how to choose guitar teacher, guitar lessons",
+                  "image": "/assets/blog/best-guitar-teacher.jpg",
+                  "why": "Many students lose confidence because they start with a teacher who focuses on shortcuts instead of structure, listening, and stage-ready technique.",
+                  "mistakes": [
+                      "Choosing only by low fees",
+                      "Ignoring whether the teacher corrects details",
+                      "Learning random songs without a system",
+                      "Not checking communication quality",
+                      "Staying too long with no measurable progress"
+                  ],
+                  "today": [
+                      "Ask what structure the teacher follows in the first 8 weeks.",
+                      "Check whether they teach technique, timing, and confidence together.",
+                      "See if they adapt based on talent, not just age.",
+                      "Choose clarity over cheap pricing."
+                  ],
+                  "tip": "A good teacher saves months. A weak teacher creates habits you later pay to unlearn.",
+                  "final": "If you want one-to-one structured mentorship with clarity, discipline, and performance confidence, Abhishek Sessions can guide you properly."
               },
               {
                   "title": "Best Guitar for Beginners in India (Complete Buying Guide)",
                   "slug": "best-guitar-for-beginners-india",
-                  "excerpt": "A practical buying guide for choosing your first guitar in India."
+                  "excerpt": "A practical buying guide for choosing your first guitar in India without wasting money.",
+                  "keywords": "best guitar for beginners india, beginner guitar buying guide, acoustic guitar india, first guitar",
+                  "image": "/assets/blog/beginner-guitar-india.jpg",
+                  "why": "Many beginners buy flashy guitars that look good online but feel uncomfortable, sound weak, and make practice harder.",
+                  "mistakes": [
+                      "Buying only by looks",
+                      "Ignoring neck comfort and action",
+                      "Choosing a poor-quality starter pack",
+                      "Not matching the guitar to your budget and goals",
+                      "Thinking expensive always means better for a beginner"
+                  ],
+                  "today": [
+                      "Choose comfort first, brand second.",
+                      "Check string height and tuning stability.",
+                      "Start with a balanced acoustic if you want singing and chord practice.",
+                      "Ask before buying if you are unsure."
+                  ],
+                  "tip": "A guitar that feels easy in the hand keeps you consistent. The wrong one makes you quit quietly.",
+                  "final": "Abhishek Sessions can help you choose the right beginner guitar before you spend money blindly."
               },
               {
                   "title": "Guitar String Guide: Which Strings Are Best for Beginners?",
                   "slug": "best-guitar-strings-for-beginners",
-                  "excerpt": "Gauge, feel, and what beginners should actually buy."
+                  "excerpt": "String gauge changes comfort, tone, and consistency. Here is what beginners should actually buy.",
+                  "keywords": "best guitar strings for beginners, guitar string gauge, acoustic strings beginner, easy guitar setup",
+                  "image": "/assets/blog/guitar-strings-guide.jpg",
+                  "why": "Wrong strings make a decent guitar feel painful and stiff. Beginners often blame themselves when the real issue is setup and string choice.",
+                  "mistakes": [
+                      "Using very heavy strings too early",
+                      "Ignoring finger pain caused by poor setup",
+                      "Buying random strings from marketplaces",
+                      "Changing gauge without understanding feel",
+                      "Never replacing dead strings"
+                  ],
+                  "today": [
+                      "Start with lighter strings for easier control.",
+                      "Change dead strings if tone feels dull.",
+                      "Choose comfort if you are in your first months.",
+                      "Keep your instrument properly set up."
+                  ],
+                  "tip": "Good strings do not just improve sound. They improve discipline because the instrument feels rewarding to play.",
+                  "final": "Abhishek Sessions can guide you on strings, picks, and setup so your practice becomes smoother from day one."
               },
               {
                   "title": "10 Easy Guitar Songs Every Beginner Should Learn",
                   "slug": "easy-guitar-songs-for-beginners",
-                  "excerpt": "Starter-friendly songs to build confidence and rhythm."
+                  "excerpt": "Simple songs that build confidence, rhythm, and better chord transitions for beginners.",
+                  "keywords": "easy guitar songs for beginners, beginner guitar songs, first songs on guitar, guitar practice songs",
+                  "image": "/assets/blog/easy-guitar-songs.jpg",
+                  "why": "Beginners need songs that build timing and comfort, not songs that only look impressive on reels.",
+                  "mistakes": [
+                      "Choosing songs that are too advanced",
+                      "Changing songs too quickly",
+                      "Ignoring rhythm while focusing only on chords",
+                      "Practicing without a metronome",
+                      "Not repeating one song enough to build control"
+                  ],
+                  "today": [
+                      "Choose two simple songs and repeat them all week.",
+                      "Play slow and clean before trying speed.",
+                      "Track chord transition weak points.",
+                      "Record yourself for 20 seconds and review honestly."
+                  ],
+                  "tip": "The right easy song does not keep you basic. It builds the base that later makes advanced songs possible.",
+                  "final": "Abhishek Sessions teaches song selection with structure so every song improves your musicianship, not just your memory."
               },
               {
                   "title": "Guitar Pick Sizes Explained (Most Beginners Use the Wrong One)",
                   "slug": "best-guitar-pick-for-beginners",
-                  "excerpt": "Pick thickness affects tone and control—choose correctly."
+                  "excerpt": "Pick thickness affects tone, control, and confidence. Most beginners use the wrong one.",
+                  "keywords": "guitar pick size, best guitar pick for beginners, guitar pick thickness, beginner guitar tips",
+                  "image": "/assets/blog/guitar-pick-guide.jpg",
+                  "why": "A bad pick choice makes timing loose and tone inconsistent. Many beginners do not realise the pick itself is slowing progress.",
+                  "mistakes": [
+                      "Using very thin picks for everything",
+                      "Ignoring grip and control",
+                      "Choosing a random pick at the counter",
+                      "Not matching pick size to playing style",
+                      "Blaming technique when equipment is the real issue"
+                  ],
+                  "today": [
+                      "Try a medium pick if you are starting out.",
+                      "Notice whether your strumming sounds controlled or messy.",
+                      "Use one pick consistently for a few days.",
+                      "Focus on comfort before experimenting heavily."
+                  ],
+                  "tip": "Small changes in gear often create big changes in confidence.",
+                  "final": "Abhishek Sessions can help you choose the right pick, strings, and practice structure so your progress becomes cleaner and faster."
               },
               {
                   "title": "What is a Chord Family? (Secret Behind Most Songs)",
                   "slug": "guitar-chord-family-explained",
-                  "excerpt": "Understand chord families and why songs feel easy after this."
+                  "excerpt": "Understand chord families and you will suddenly see why many songs feel easier than before.",
+                  "keywords": "chord family guitar, guitar theory for beginners, common chord progressions, guitar song structure",
+                  "image": "/assets/blog/chord-family.jpg",
+                  "why": "Students often memorise songs one by one without seeing the pattern behind them. That makes learning slower than it should be.",
+                  "mistakes": [
+                      "Memorising shapes without context",
+                      "Ignoring the key of the song",
+                      "Thinking theory is separate from practical playing",
+                      "Learning progressions without listening properly",
+                      "Never grouping songs by family"
+                  ],
+                  "today": [
+                      "Learn one common four-chord family properly.",
+                      "Notice how many songs use the same movement.",
+                      "Train your ear, not just your fingers.",
+                      "Write down the chord pattern after practice."
+                  ],
+                  "tip": "Understanding patterns reduces fear. Music becomes simpler when the structure becomes visible.",
+                  "final": "Abhishek Sessions teaches theory in a practical way so songs feel easier, not more confusing."
               },
               {
                   "title": "How to Learn Guitar Faster (Practice Routine That Works)",
                   "slug": "learn-guitar-faster-practice-routine",
-                  "excerpt": "A daily routine that makes progress visible in weeks."
+                  "excerpt": "A practical guitar routine that creates visible progress without wasting time.",
+                  "keywords": "learn guitar faster, guitar practice routine, daily guitar practice, guitar discipline",
+                  "image": "/assets/blog/guitar-practice-routine.jpg",
+                  "why": "Many learners practice for long durations without structure, then wonder why progress still feels slow.",
+                  "mistakes": [
+                      "Practicing randomly",
+                      "Playing only what already feels easy",
+                      "Never timing practice blocks",
+                      "Ignoring weak areas",
+                      "Mistaking long practice for smart practice"
+                  ],
+                  "today": [
+                      "Split practice into technique, rhythm, and song application.",
+                      "Use a timer for focused blocks.",
+                      "Keep one measurable goal per session.",
+                      "Review one recording every week."
+                  ],
+                  "tip": "Speed in learning comes from structure, not chaos.",
+                  "final": "Abhishek Sessions builds routines around clarity, correction, and consistency so growth becomes visible week by week."
               },
               {
                   "title": "Why Many Guitar Students Quit (And How to Avoid It)",
                   "slug": "why-guitar-students-quit",
-                  "excerpt": "The real reasons people quit—and how to stay consistent."
+                  "excerpt": "The real reasons students quit guitar and what helps them stay consistent.",
+                  "keywords": "why guitar students quit, guitar motivation, beginner guitar mistakes, guitar consistency",
+                  "image": "/assets/blog/why-students-quit-guitar.jpg",
+                  "why": "Most people do not quit because they lack talent. They quit because progress feels confusing, slow, or lonely.",
+                  "mistakes": [
+                      "Expecting fast perfection",
+                      "Practicing without milestones",
+                      "Using weak learning systems",
+                      "Comparing too much with others",
+                      "Choosing convenience over guidance"
+                  ],
+                  "today": [
+                      "Set one small win for this week.",
+                      "Track consistency, not just performance.",
+                      "Fix confusion early instead of waiting.",
+                      "Use guidance when you feel stuck."
+                  ],
+                  "tip": "Confidence keeps people going. Structure builds confidence.",
+                  "final": "Abhishek Sessions helps learners stay in motion with realistic, disciplined progress systems."
               },
               {
                   "title": "Top 10 Viral Guitar Songs Everyone Loves Playing",
                   "slug": "viral-guitar-songs",
-                  "excerpt": "Trending songs that sound great on acoustic and reels."
+                  "excerpt": "Popular songs that sound great on guitar and also help build confidence and crowd response.",
+                  "keywords": "viral guitar songs, trending guitar songs, guitar songs for reels, acoustic guitar songs",
+                  "image": "/assets/blog/viral-guitar-songs.jpg",
+                  "why": "The right viral songs can build performance confidence, social visibility, and audience connection if chosen wisely.",
+                  "mistakes": [
+                      "Choosing only trendy songs with weak musical value",
+                      "Ignoring your current level",
+                      "Playing songs too fast too early",
+                      "Copying reels without solid timing",
+                      "Not adapting the arrangement to your skill"
+                  ],
+                  "today": [
+                      "Choose one viral song you can actually play cleanly.",
+                      "Focus on rhythm and confidence first.",
+                      "Keep transitions smooth.",
+                      "Record a short clean version before posting."
+                  ],
+                  "tip": "A simple song played with control is more powerful than a flashy song played badly.",
+                  "final": "Abhishek Sessions can help you turn trending songs into real performance pieces, not just social clips."
               },
               {
                   "title": "Acoustic vs Electric Guitar: Which One Should You Learn First?",
                   "slug": "acoustic-vs-electric-guitar",
-                  "excerpt": "Which one to start with, based on goals and budget."
+                  "excerpt": "A clear comparison based on goals, comfort, budget, and long-term learning.",
+                  "keywords": "acoustic vs electric guitar, which guitar to learn first, beginner guitar guide, guitar buying advice",
+                  "image": "/assets/blog/acoustic-vs-electric.jpg",
+                  "why": "Many learners get stuck at the very first step because they do not know which instrument suits their actual goals.",
+                  "mistakes": [
+                      "Choosing by appearance only",
+                      "Ignoring budget beyond the guitar itself",
+                      "Not thinking about portability and setup",
+                      "Copying someone else's choice blindly",
+                      "Starting with the wrong expectation"
+                  ],
+                  "today": [
+                      "Choose acoustic if you want singing, chords, and simplicity.",
+                      "Choose electric if tone shaping and lead interest matter more.",
+                      "Think long term, not only first excitement.",
+                      "Ask before investing if confused."
+                  ],
+                  "tip": "The best first guitar is the one that keeps you practicing consistently.",
+                  "final": "Abhishek Sessions can help you choose the instrument that matches your goals, budget, and growth path."
               }
           ]
 
@@ -93,56 +273,81 @@ jobs:
           md_filename = f"{today}-{chosen['slug']}.md"
           md_path = os.path.join(blog_dir, md_filename)
 
-          body = f"""# {chosen['title']}
-
-{chosen['excerpt']}
+          if not os.path.exists(md_path):
+              body = f'''title: "{chosen["title"]}"
+date: "{today}"
+slug: "{chosen["slug"]}"
+excerpt: "{chosen["excerpt"]}"
+keywords: "{chosen["keywords"]}"
+image: "{chosen["image"]}"
 
 ## Why this matters
-Many beginners waste time and money because they start without the right guidance, gear, or practice structure.
+{chosen["why"]}
 
-## What you should do
-- Focus on clarity before speed.
-- Build correct fundamentals first.
-- Avoid random YouTube learning without structure.
-- Use the right instrument and accessories for your level.
+### Mistakes people make
+- {chosen["mistakes"][0]}
+- {chosen["mistakes"][1]}
+- {chosen["mistakes"][2]}
+- {chosen["mistakes"][3]}
+- {chosen["mistakes"][4]}
 
-## Final note
-If you want structured one-to-one music mentorship and honest guidance on instruments, Abhishek Sessions can help you choose the right path.
-"""
+### What you should do today
+- {chosen["today"][0]}
+- {chosen["today"][1]}
+- {chosen["today"][2]}
+- {chosen["today"][3]}
 
-          with open(md_path, "w", encoding="utf-8") as f:
-              f.write(body)
+### Quick tip
+{chosen["tip"]}
+
+---
+{chosen["final"]}
+'''
+              with open(md_path, "w", encoding="utf-8") as f:
+                  f.write(body)
 
           valid_posts = []
           for file in os.listdir(blog_dir):
               if not file.endswith(".md"):
                   continue
 
-              # Accept only files like 2026-03-05-something.md
               if len(file) < 15 or file[4] != "-" or file[7] != "-":
                   continue
 
-              date_part = file[:10]
-              slug_part = file[11:-3]
-
-              title = ""
-              excerpt = ""
-
               with open(os.path.join(blog_dir, file), "r", encoding="utf-8") as f:
-                  lines = [line.strip() for line in f.readlines() if line.strip()]
+                  lines = [line.rstrip("\n") for line in f.readlines()]
 
-              if lines and lines[0].startswith("# "):
-                  title = lines[0][2:].strip()
+              meta = {
+                  "title": "",
+                  "date": "",
+                  "slug": "",
+                  "excerpt": "",
+                  "keywords": "",
+                  "image": ""
+              }
 
-              if len(lines) > 1:
-                  excerpt = lines[1].strip()
+              content_start = 0
+              for i, raw in enumerate(lines):
+                  line = raw.strip()
+                  if not line:
+                      content_start = i + 1
+                      break
 
-              if title:
+                  if ":" in line:
+                      key, value = line.split(":", 1)
+                      key = key.strip().lower()
+                      value = value.strip().strip('"')
+                      if key in meta:
+                          meta[key] = value
+
+              if meta["title"]:
                   valid_posts.append({
-                      "title": title,
-                      "date": date_part,
-                      "slug": slug_part,
-                      "excerpt": excerpt,
+                      "title": meta["title"],
+                      "date": meta["date"] or file[:10],
+                      "slug": meta["slug"] or file[11:-3],
+                      "excerpt": meta["excerpt"],
+                      "keywords": meta["keywords"],
+                      "image": meta["image"],
                       "url": f"/blog/{file}"
                   })
 
@@ -151,7 +356,7 @@ If you want structured one-to-one music mentorship and honest guidance on instru
           with open(os.path.join(blog_dir, "index.json"), "w", encoding="utf-8") as f:
               json.dump({"posts": valid_posts}, f, ensure_ascii=False, indent=2)
 
-          print("Generated blog post and refreshed blog/index.json")
+          print("Generated premium blog post and refreshed blog/index.json")
           PY
 
       - name: Commit and push

@@ -11,8 +11,6 @@
     :root{
       --bg:#08080c;
       --panel:#111118;
-      --panel-2:#151520;
-      --panel-3:#1a1a26;
       --text:#ececf3;
       --muted:#b9b9c7;
       --gold:#d4af37;
@@ -22,7 +20,6 @@
       --wa:#25D366;
       --shadow:0 20px 50px rgba(0,0,0,.28);
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
@@ -35,13 +32,11 @@
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       line-height:1.7;
     }
-
     .shell{
       max-width:1240px;
       margin:0 auto;
       padding:24px 18px 90px;
     }
-
     .topbar{
       display:flex;
       align-items:center;
@@ -50,7 +45,6 @@
       margin-bottom:22px;
       flex-wrap:wrap;
     }
-
     .brand{
       display:flex;
       align-items:center;
@@ -61,7 +55,6 @@
       background:rgba(17,17,24,.62);
       backdrop-filter:blur(8px);
     }
-
     .mark{
       width:44px;
       height:44px;
@@ -74,19 +67,16 @@
       letter-spacing:.5px;
       background:rgba(212,175,55,.06);
     }
-
     .brand h1{
       margin:0;
       font-size:16px;
       letter-spacing:.6px;
     }
-
     .brand p{
       margin:2px 0 0;
       color:var(--muted);
       font-size:12px;
     }
-
     .btn{
       text-decoration:none;
       color:#08080c;
@@ -99,7 +89,6 @@
       box-shadow:0 10px 24px rgba(212,175,55,.18);
       white-space:nowrap;
     }
-
     .hero{
       border:1px solid var(--line);
       border-radius:28px;
@@ -110,23 +99,19 @@
       box-shadow:var(--shadow);
       position:relative;
     }
-
     .hero::before{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
-      background:
-        linear-gradient(90deg, transparent, rgba(212,175,55,.05), transparent);
+      background:linear-gradient(90deg, transparent, rgba(212,175,55,.05), transparent);
       opacity:.5;
     }
-
     .hero-inner{
       padding:36px 28px 28px;
       position:relative;
       z-index:1;
     }
-
     .eyebrow{
       display:inline-flex;
       align-items:center;
@@ -140,7 +125,6 @@
       background:rgba(212,175,55,.06);
       margin-bottom:16px;
     }
-
     .hero h2{
       margin:0 0 14px;
       font-family:"Playfair Display", Georgia, serif;
@@ -149,7 +133,6 @@
       letter-spacing:.1px;
       max-width:14ch;
     }
-
     .lede{
       margin:0;
       color:var(--muted);
@@ -157,14 +140,12 @@
       line-height:1.8;
       max-width:72ch;
     }
-
     .meta-row{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
       margin-top:18px;
     }
-
     .meta-chip{
       padding:8px 12px;
       border:1px solid var(--soft);
@@ -173,7 +154,6 @@
       color:var(--muted);
       font-size:13px;
     }
-
     .featured{
       display:none;
       width:100%;
@@ -183,7 +163,6 @@
       border-bottom:1px solid var(--soft);
       background:#111;
     }
-
     .layout{
       display:grid;
       grid-template-columns:minmax(0,1fr) 320px;
@@ -191,16 +170,13 @@
       margin-top:28px;
       align-items:start;
     }
-
     .article-wrap{
       border:1px solid var(--soft);
       border-radius:24px;
       overflow:hidden;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
       box-shadow:var(--shadow);
     }
-
     .article-topline{
       display:flex;
       align-items:center;
@@ -212,18 +188,15 @@
       color:var(--muted);
       font-size:13px;
     }
-
     .article-topline strong{
       color:var(--gold);
       font-weight:700;
     }
-
     .article{
       padding:34px 26px 38px;
       font-size:18px;
       line-height:1.95;
     }
-
     .article h2,
     .article h3{
       font-family:"Playfair Display", Georgia, serif;
@@ -232,58 +205,47 @@
       color:#fff;
       position:relative;
     }
-
     .article h2{
       font-size:34px;
       padding-bottom:8px;
       border-bottom:1px solid var(--line);
     }
-
     .article h3{
       font-size:26px;
     }
-
     .article p{
       margin:0 0 16px;
       color:#e8e8ef;
     }
-
     .article ul{
       margin:0 0 24px 18px;
       padding:0;
     }
-
     .article li{
       margin:0 0 12px;
       padding-left:4px;
     }
-
     .article strong{
       color:#fff;
     }
-
     .callout{
       margin:26px 0;
       padding:18px 18px 16px;
       border:1px solid var(--line);
       border-radius:18px;
-      background:
-        linear-gradient(180deg, rgba(212,175,55,.07), rgba(212,175,55,.035));
+      background:linear-gradient(180deg, rgba(212,175,55,.07), rgba(212,175,55,.035));
     }
-
     .callout-title{
       color:var(--gold);
       font-weight:800;
       margin-bottom:8px;
       letter-spacing:.2px;
     }
-
     .divider{
       height:1px;
       background:linear-gradient(90deg, transparent, rgba(212,175,55,.35), transparent);
       margin:24px 0;
     }
-
     .sidebar{
       display:flex;
       flex-direction:column;
@@ -291,29 +253,24 @@
       position:sticky;
       top:18px;
     }
-
     .side-card{
       border:1px solid var(--soft);
       border-radius:20px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
       padding:18px;
       box-shadow:var(--shadow);
     }
-
     .side-card h3{
       margin:0 0 10px;
       font-size:19px;
       font-family:"Playfair Display",Georgia,serif;
     }
-
     .side-card p{
       margin:0 0 12px;
       color:var(--muted);
       font-size:14px;
       line-height:1.75;
     }
-
     .side-link{
       display:inline-flex;
       align-items:center;
@@ -323,7 +280,6 @@
       text-decoration:none;
       font-size:14px;
     }
-
     .cta{
       margin-top:24px;
       border:1px solid var(--line);
@@ -335,19 +291,16 @@
       text-align:center;
       box-shadow:var(--shadow);
     }
-
     .cta h3{
       margin:0 0 10px;
       font-size:31px;
       font-family:"Playfair Display",Georgia,serif;
     }
-
     .cta p{
       margin:0 0 16px;
       color:var(--muted);
       line-height:1.8;
     }
-
     .cta a{
       display:inline-block;
       background:linear-gradient(180deg,var(--gold-2),var(--gold));
@@ -358,29 +311,24 @@
       font-weight:700;
       box-shadow:0 10px 24px rgba(212,175,55,.18);
     }
-
     .related{
       margin-top:24px;
       border:1px solid var(--soft);
       border-radius:24px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
       padding:22px;
       box-shadow:var(--shadow);
     }
-
     .related h3{
       margin:0 0 16px;
       font-size:28px;
       font-family:"Playfair Display",Georgia,serif;
     }
-
     .related-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:14px;
     }
-
     .related-item{
       border:1px solid var(--soft);
       border-radius:18px;
@@ -390,32 +338,27 @@
       background:rgba(255,255,255,.02);
       transition:transform .2s ease, border-color .2s ease;
     }
-
     .related-item:hover{
       border-color:var(--line);
       transform:translateY(-2px);
     }
-
     .related-item small{
       display:block;
       color:var(--gold);
       margin-bottom:8px;
       font-weight:700;
     }
-
     .related-item strong{
       display:block;
       font-size:16px;
       line-height:1.5;
       margin-bottom:8px;
     }
-
     .related-item span{
       color:var(--muted);
       font-size:14px;
       line-height:1.6;
     }
-
     .whatsapp-sticky{
       position:fixed;
       right:20px;
@@ -429,7 +372,6 @@
       box-shadow:0 14px 30px rgba(0,0,0,.35);
       z-index:20;
     }
-
     .hidden{display:none !important}
 
     @media (max-width:980px){
@@ -676,10 +618,10 @@
         document.getElementById("excerpt").textContent = meta.excerpt || "Practical insight from Abhishek Sessions.";
 
         const featured = document.getElementById("featured");
-        if(meta.image){
-          featured.src = meta.image;
-          featured.classList.remove("hidden");
-        }
+const fallbackImage = "/assets/blog/default-blog-cover.jpg";
+
+featured.src = meta.image && meta.image.trim() ? meta.image : fallbackImage;
+featured.classList.remove("hidden");
 
         let articleHtml = markdownToHtml(content);
 

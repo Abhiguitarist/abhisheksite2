@@ -25,6 +25,7 @@
     <main class="main-content">
       <section id="view-home" class="view active"></section>
       <section id="view-students" class="view"></section>
+      <section id="view-calendar" class="view"></section>
       <section id="view-attendance" class="view"></section>
       <section id="view-payments" class="view"></section>
       <section id="view-more" class="view"></section>
@@ -33,13 +34,13 @@
     <nav class="bottom-nav">
       <button class="nav-item active" data-view="home">Home</button>
       <button class="nav-item" data-view="students">Students</button>
+      <button class="nav-item" data-view="calendar">Calendar</button>
       <button class="nav-item" data-view="attendance">Attendance</button>
       <button class="nav-item" data-view="payments">Payments</button>
       <button class="nav-item" data-view="more">More</button>
     </nav>
   </div>
 
-  <!-- Add Student Modal -->
   <div class="modal hidden" id="studentModal">
     <div class="modal-scrim" data-close="studentModal"></div>
     <div class="modal-card">
@@ -76,7 +77,6 @@
     </div>
   </div>
 
-  <!-- Attendance Modal -->
   <div class="modal hidden" id="attendanceModal">
     <div class="modal-scrim" data-close="attendanceModal"></div>
     <div class="modal-card">
@@ -86,7 +86,7 @@
       </div>
       <div id="attendanceStudentMeta" class="mini-meta"></div>
 
-      <div class="chip-group" id="attendanceNoteChips">
+      <div class="chip-group">
         <button class="chip-select" data-note="Good Progress">Good Progress</button>
         <button class="chip-select" data-note="Needs Revision">Needs Revision</button>
         <button class="chip-select" data-note="Rhythm Focus">Rhythm Focus</button>
@@ -103,7 +103,6 @@
     </div>
   </div>
 
-  <!-- Package Modal -->
   <div class="modal hidden" id="packageModal">
     <div class="modal-scrim" data-close="packageModal"></div>
     <div class="modal-card">
@@ -125,7 +124,6 @@
     </div>
   </div>
 
-  <!-- Payment Modal -->
   <div class="modal hidden" id="paymentModal">
     <div class="modal-scrim" data-close="paymentModal"></div>
     <div class="modal-card">
@@ -149,12 +147,62 @@
           <option value="cash">Cash</option>
           <option value="other">Other</option>
         </select>
-        <input id="pay_link" placeholder="Payment link (optional)" />
+        <input id="pay_link" placeholder="Payment link" />
         <input id="pay_date" type="date" />
       </div>
       <div class="modal-actions stacked">
         <button class="primary-btn" id="savePaymentBtn">Save Payment</button>
         <button class="ghost-btn" id="openPaymentMessageBtn">Open WhatsApp Message</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="scheduleModal">
+    <div class="modal-scrim" data-close="scheduleModal"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Schedule Class</h3>
+        <button class="icon-btn" data-close="scheduleModal">✕</button>
+      </div>
+      <div class="form-grid">
+        <select id="sch_student_id"></select>
+        <input id="sch_title" placeholder="Title" />
+        <input id="sch_date" type="date" />
+        <input id="sch_time" type="time" />
+        <input id="sch_duration" type="number" placeholder="Duration (minutes)" />
+        <input id="sch_area" placeholder="Area" />
+        <input id="sch_note" placeholder="Note" />
+      </div>
+      <div class="modal-actions">
+        <button class="ghost-btn" data-close="scheduleModal">Cancel</button>
+        <button class="primary-btn" id="saveScheduleBtn">Save Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="rescheduleModal">
+    <div class="modal-scrim" data-close="rescheduleModal"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Reschedule Class</h3>
+        <button class="icon-btn" data-close="rescheduleModal">✕</button>
+      </div>
+      <div id="rescheduleMeta" class="mini-meta"></div>
+      <div class="form-grid">
+        <input id="re_date" type="date" />
+        <input id="re_time" type="time" />
+      </div>
+      <div class="chip-group">
+        <button class="chip-select" data-res-note="Parent unavailable">Parent unavailable</button>
+        <button class="chip-select" data-res-note="Mentor unavailable">Mentor unavailable</button>
+        <button class="chip-select" data-res-note="Traffic delay">Traffic delay</button>
+        <button class="chip-select" data-res-note="Holiday">Holiday</button>
+        <button class="chip-select" data-res-note="Health issue">Health issue</button>
+      </div>
+      <textarea id="re_note" rows="3" placeholder="Reason / note"></textarea>
+      <div class="modal-actions">
+        <button class="ghost-btn" data-close="rescheduleModal">Cancel</button>
+        <button class="primary-btn" id="saveRescheduleBtn">Save Reschedule</button>
       </div>
     </div>
   </div>

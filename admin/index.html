@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhishek Sessions Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">AS</div>
+        <div>
+          <h1>ABHISHEK SESSIONS</h1>
+          <p>Private Mentor Admin</p>
+        </div>
+      </div>
+      <button class="ghost-btn" id="refreshBtn">Refresh</button>
+    </header>
+
+    <main class="main-content">
+      <section id="view-home" class="view active"></section>
+      <section id="view-students" class="view"></section>
+      <section id="view-attendance" class="view"></section>
+      <section id="view-payments" class="view"></section>
+      <section id="view-more" class="view"></section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-view="home">Home</button>
+      <button class="nav-item" data-view="students">Students</button>
+      <button class="nav-item" data-view="attendance">Attendance</button>
+      <button class="nav-item" data-view="payments">Payments</button>
+      <button class="nav-item" data-view="more">More</button>
+    </nav>
+  </div>
+
+  <!-- Add Student Modal -->
+  <div class="modal hidden" id="studentModal">
+    <div class="modal-scrim" data-close="studentModal"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Add Student</h3>
+        <button class="icon-btn" data-close="studentModal">✕</button>
+      </div>
+      <div class="form-grid">
+        <input id="s_student_name" placeholder="Student name" />
+        <input id="s_parent_name" placeholder="Parent name" />
+        <input id="s_phone" placeholder="Phone" />
+        <input id="s_whatsapp" placeholder="WhatsApp" />
+        <select id="s_instrument">
+          <option value="guitar">Guitar</option>
+          <option value="piano">Piano</option>
+          <option value="vocal">Vocal</option>
+        </select>
+        <select id="s_format">
+          <option value="home">Home</option>
+          <option value="online">Online</option>
+        </select>
+        <input id="s_area" placeholder="Area" />
+        <input id="s_address" placeholder="Address" />
+        <input id="s_pincode" placeholder="Pincode" />
+        <input id="s_maps_link" placeholder="Google Maps link" />
+        <input id="s_start_date" type="date" />
+        <input id="s_fee_per_package" type="number" placeholder="Fee per 8-class package" />
+        <input id="s_notes" placeholder="Notes" />
+      </div>
+      <div class="modal-actions">
+        <button class="ghost-btn" data-close="studentModal">Cancel</button>
+        <button class="primary-btn" id="saveStudentBtn">Save Student</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance Modal -->
+  <div class="modal hidden" id="attendanceModal">
+    <div class="modal-scrim" data-close="attendanceModal"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Mark Class</h3>
+        <button class="icon-btn" data-close="attendanceModal">✕</button>
+      </div>
+      <div id="attendanceStudentMeta" class="mini-meta"></div>
+
+      <div class="chip-group" id="attendanceNoteChips">
+        <button class="chip-select" data-note="Good Progress">Good Progress</button>
+        <button class="chip-select" data-note="Needs Revision">Needs Revision</button>
+        <button class="chip-select" data-note="Rhythm Focus">Rhythm Focus</button>
+        <button class="chip-select" data-note="Technique Correction">Technique Correction</button>
+        <button class="chip-select" data-note="Homework Given">Homework Given</button>
+      </div>
+
+      <textarea id="attendanceNote" rows="4" placeholder="Optional class note"></textarea>
+
+      <div class="modal-actions stacked">
+        <button class="primary-btn" id="saveAttendanceBtn">Save Attendance</button>
+        <button class="ghost-btn" id="saveAttendanceSendBtn">Save + Open Parent Update</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Package Modal -->
+  <div class="modal hidden" id="packageModal">
+    <div class="modal-scrim" data-close="packageModal"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Create / Renew Package</h3>
+        <button class="icon-btn" data-close="packageModal">✕</button>
+      </div>
+      <div class="form-grid">
+        <input id="p_student_name" placeholder="Student name" disabled />
+        <input id="p_package_title" placeholder="Package title" />
+        <input id="p_topic_focus" placeholder="Topic focus" />
+        <input id="p_amount" type="number" placeholder="Amount" />
+        <input id="p_start_date" type="date" />
+      </div>
+      <div class="modal-actions">
+        <button class="ghost-btn" data-close="packageModal">Cancel</button>
+        <button class="primary-btn" id="savePackageBtn">Save Package</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal hidden" id="paymentModal">
+    <div class="modal-scrim" data-close="paymentModal"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Create Payment Record</h3>
+        <button class="icon-btn" data-close="paymentModal">✕</button>
+      </div>
+      <div class="form-grid">
+        <input id="pay_student_name" placeholder="Student name" disabled />
+        <input id="pay_title" placeholder="Payment title" />
+        <input id="pay_note" placeholder="Payment note / focus" />
+        <input id="pay_amount" type="number" placeholder="Amount" />
+        <select id="pay_status">
+          <option value="pending">Pending</option>
+          <option value="paid">Paid</option>
+          <option value="overdue">Overdue</option>
+        </select>
+        <select id="pay_method">
+          <option value="upi">UPI</option>
+          <option value="bank">Bank</option>
+          <option value="cash">Cash</option>
+          <option value="other">Other</option>
+        </select>
+        <input id="pay_link" placeholder="Payment link (optional)" />
+        <input id="pay_date" type="date" />
+      </div>
+      <div class="modal-actions stacked">
+        <button class="primary-btn" id="savePaymentBtn">Save Payment</button>
+        <button class="ghost-btn" id="openPaymentMessageBtn">Open WhatsApp Message</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

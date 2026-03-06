@@ -1,5 +1,5 @@
 const SUPABASE_URL = "https://acuzccqiwzelpllblags.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_46elweHoFHMZOzYvzZRqJw_gXUyfOrc";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
 
 const BUSINESS_UPI_ID = "7011328912@pthdfc";
 const BUSINESS_PAYEE_NAME = "Abhishek Sessions";
@@ -7,7 +7,6 @@ const BUSINESS_PAYEE_NAME = "Abhishek Sessions";
 function buildUpiLink({ amount, title, studentName, note }) {
   const cleanAmount = Number(amount || 0).toFixed(2);
   const txnNote = `${title}${studentName ? " - " + studentName : ""}${note ? " | " + note : ""}`;
-
   return `upi://pay?pa=${encodeURIComponent(BUSINESS_UPI_ID)}&pn=${encodeURIComponent(BUSINESS_PAYEE_NAME)}&am=${encodeURIComponent(cleanAmount)}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
 }
 
@@ -24,16 +23,22 @@ const state = {
   classes: [],
   payments: [],
   route_logs: [],
-  selectedStudent: null,
+  messages: [],
+  schedule_events: [],
   selectedAttendanceStudent: null,
   selectedPackageStudent: null,
   selectedPaymentStudent: null,
+  selectedScheduleEvent: null,
   studentFilter: "all",
-  studentSearch: ""
+  studentSearch: "",
+  calendarFilter: "all",
+  calendarTab: "agenda"
 };
 
 function byId(id){ return document.getElementById(id); }
 function todayISO(){ return new Date().toISOString().slice(0,10); }
+function tomorrowISO(){ const d = new Date(); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10); }
+function capitalize(v){ return (v || "").charAt(0).toUpperCase() + (v || "").slice(1); }
 
 async function apiGet(table, query = "") {
   const url = `${SUPABASE_URL}/rest/v1/${table}${query ? `?${query}` : ""}`;
@@ -75,8 +80,14 @@ document.addEventListener("click", (e) => {
 
   const chip = e.target.closest(".chip-select");
   if (chip && byId("attendanceNote")) {
-    const noteBox = byId("attendanceNote");
-    noteBox.value = noteBox.value ? `${noteBox.value}, ${chip.dataset.note}` : chip.dataset.note;
+    if (chip.dataset.note) {
+      const noteBox = byId("attendanceNote");
+      noteBox.value = noteBox.value ? `${noteBox.value}, ${chip.dataset.note}` : chip.dataset.note;
+    }
+    if (chip.dataset.resNote) {
+      const noteBox = byId("re_note");
+      noteBox.value = noteBox.value ? `${noteBox.value}, ${chip.dataset.resNote}` : chip.dataset.resNote;
+    }
   }
 });
 
@@ -88,11 +99,13 @@ function setView(viewName){
 }
 
 function packageForStudent(studentId){
-  return state.packages.find(p => p.student_id === studentId && p.status === "active");
+  return state.packages.find(p => Number(p.student_id) === Number(studentId) && p.status === "active");
 }
 
 function classesForStudent(studentId){
-  return state.classes.filter(c => c.student_id === studentId).sort((a,b) => (b.class_date || "").localeCompare(a.class_date || ""));
+  return state.classes
+    .filter(c => Number(c.student_id) === Number(studentId))
+    .sort((a,b) => `${b.class_date || ""}${b.class_time || ""}`.localeCompare(`${a.class_date || ""}${a.class_time || ""}`));
 }
 
 function paymentTag(status){
@@ -103,15 +116,29 @@ function paymentTag(status){
 
 function packageAlertTag(pkg){
   if(!pkg) return { text: "No Package", cls: "red" };
-  if(pkg.used_classes >= 8) return { text: "8/8 Completed", cls: "red" };
-  if(pkg.used_classes >= 7) return { text: `${pkg.used_classes}/8 Renewal Due`, cls: "orange" };
-  if(pkg.used_classes >= 5) return { text: `${pkg.used_classes}/8 Watch`, cls: "gold" };
+  if(Number(pkg.used_classes) >= 8) return { text: "8/8 Completed", cls: "red" };
+  if(Number(pkg.used_classes) >= 7) return { text: `${pkg.used_classes}/8 Renewal Due`, cls: "orange" };
+  if(Number(pkg.used_classes) >= 5) return { text: `${pkg.used_classes}/8 Watch`, cls: "gold" };
   return { text: `${pkg.used_classes}/8 Active`, cls: "green" };
 }
 
 function whatsappLink(number, text){
   const clean = (number || "").replace(/\D/g, "");
   return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
+}
+
+function formatDatePretty(dateStr){
+  if(!dateStr) return "-";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function formatTime(time){
+  if(!time) return "-";
+  const [h, m] = time.split(":");
+  const d = new Date();
+  d.setHours(Number(h), Number(m || 0));
+  return d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
 }
 
 async function loadAllData(){
@@ -121,41 +148,46 @@ async function loadAllData(){
     state.classes = await apiGet("classes", "select=*&order=class_date.desc");
     state.payments = await apiGet("payments", "select=*&order=created_at.desc");
     state.route_logs = await apiGet("route_logs", "select=*&order=visit_date.desc");
+    state.messages = await apiGet("messages", "select=*&order=created_at.desc");
+    state.schedule_events = await apiGet("schedule_events", "select=*&order=event_date.asc,event_time.asc");
 
     renderHome();
     renderStudents();
+    renderCalendar();
     renderAttendance();
     renderPayments();
     renderMore();
   }catch(err){
-    alert("Data load failed. Check Supabase URL, anon key, or table setup.");
+    alert("Data load failed. Check Supabase URL, key, or table setup.");
     console.error(err);
   }
 }
 
 function renderHome(){
   const today = todayISO();
-  const todayClasses = state.classes.filter(c => c.class_date === today && c.status === "completed").length;
-  const pendingRenewals = state.packages.filter(p => p.status === "active" && p.used_classes >= 7).length;
+  const tomorrow = tomorrowISO();
+  const todayClasses = state.schedule_events.filter(e => e.event_type === "class" && e.event_date === today && e.status === "scheduled").length;
+  const pendingRenewals = state.packages.filter(p => p.status === "active" && Number(p.used_classes) >= 7).length;
   const overduePayments = state.payments.filter(p => p.status === "overdue").length;
   const month = today.slice(0,7);
   const revenue = state.payments
     .filter(p => p.status === "paid" && (p.payment_date || "").startsWith(month))
     .reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
-  const alertPackages = state.packages
-    .filter(p => p.status === "active" && p.used_classes >= 5)
-    .sort((a,b) => b.used_classes - a.used_classes)
-    .slice(0, 8);
+  const rescheduledToday = state.schedule_events.filter(e => e.event_date === today && e.status === "rescheduled").length;
+  const cancelledToday = state.schedule_events.filter(e => e.event_date === today && e.status === "cancelled").length;
+  const paymentDueToday = state.schedule_events.filter(e => e.event_type === "payment" && e.event_date === today && (e.status === "pending" || e.status === "overdue")).length;
+  const paymentDueTomorrow = state.schedule_events.filter(e => e.event_type === "payment" && e.event_date === tomorrow && (e.status === "pending" || e.status === "overdue")).length;
 
-  const activeStudents = state.students
-    .filter(s => s.status === "active")
+  const todayAgenda = state.schedule_events
+    .filter(e => e.event_date === today)
+    .sort((a,b) => `${a.event_time || ""}`.localeCompare(`${b.event_time || ""}`))
     .slice(0, 8);
 
   byId("view-home").innerHTML = `
     <div class="card" style="padding:18px;">
       <h2 class="section-title">Dashboard</h2>
-      <p class="section-sub">Click-first private command center for Abhishek Sessions.</p>
+      <p class="section-sub">Mobile-first command center for Abhishek Sessions.</p>
 
       <div class="snapshot-grid">
         <div class="card snapshot-card">
@@ -179,66 +211,57 @@ function renderHome(){
       <div class="quick-actions">
         <button class="action-btn" id="quickMarkClass">Mark Class</button>
         <button class="action-btn" id="quickAddStudent">Add Student</button>
-        <button class="action-btn" id="quickCreateRenewal">Create Renewal</button>
-        <button class="action-btn" id="quickOpenRoute">Open Route</button>
+        <button class="action-btn" id="quickAddSchedule">Add Schedule</button>
+        <button class="action-btn" id="quickOpenCalendar">Open Calendar</button>
       </div>
     </div>
 
     <div class="stack">
       <div class="card alert-card">
         <div class="row">
-          <h3 style="margin:0;">Attention Needed</h3>
-          <span class="tag gold">Alerts</span>
+          <h3 style="margin:0;">Today Snapshot</h3>
+          <span class="tag gold">Live</span>
         </div>
-        <div class="stack" style="margin-top:12px;">
-          ${alertPackages.length ? alertPackages.map(pkg => {
-            const student = state.students.find(s => s.id === pkg.student_id);
-            const tag = packageAlertTag(pkg);
-            return `
-              <div class="card list-card">
-                <div class="row">
-                  <div>
-                    <div style="font-weight:800;">${student?.student_name || "Unknown Student"}</div>
-                    <div class="meta">${student?.area || "-"} • ${pkg.package_title || "Learning Cycle"}</div>
-                  </div>
-                  <span class="tag ${tag.cls}">${tag.text}</span>
-                </div>
-                <div class="mini-actions">
-                  <button class="small-btn gold" onclick="openPackageForStudent('${pkg.student_id}')">Renew</button>
-                  <button class="small-btn" onclick="openPaymentForStudent('${pkg.student_id}')">Payment</button>
-                </div>
-              </div>
-            `;
-          }).join("") : `<div class="empty-state">No urgent alerts right now.</div>`}
-        </div>
+        <div class="kpi-line"><span>Rescheduled Today</span><span>${rescheduledToday}</span></div>
+        <div class="kpi-line"><span>Cancelled Today</span><span>${cancelledToday}</span></div>
+        <div class="kpi-line"><span>Payment Due Today</span><span>${paymentDueToday}</span></div>
+        <div class="kpi-line"><span>Payment Due Tomorrow</span><span>${paymentDueTomorrow}</span></div>
       </div>
 
       <div class="card alert-card">
         <div class="row">
-          <h3 style="margin:0;">Quick Student Actions</h3>
-          <span class="tag green">Active</span>
+          <h3 style="margin:0;">Today Agenda</h3>
+          <span class="tag green">Schedule</span>
         </div>
         <div class="stack" style="margin-top:12px;">
-          ${activeStudents.map(student => {
-            const pkg = packageForStudent(student.id);
-            const tag = packageAlertTag(pkg);
+          ${todayAgenda.length ? todayAgenda.map(ev => {
+            const student = state.students.find(s => Number(s.id) === Number(ev.student_id));
+            const isClass = ev.event_type === "class";
+            const tagClass = ev.status === "scheduled" ? "gold" : ev.status === "completed" ? "green" : ev.status === "cancelled" ? "red" : "orange";
             return `
               <div class="card list-card">
                 <div class="row">
                   <div>
-                    <div style="font-weight:800;">${student.student_name}</div>
-                    <div class="meta">${student.area || "-"} • ${student.instrument || "-"}</div>
+                    <div class="event-time">${formatTime(ev.event_time)}</div>
+                    <div style="font-weight:800;">${student?.student_name || ev.title || "Event"}</div>
+                    <div class="meta">${ev.area || student?.area || "-"} • ${capitalize(ev.event_type)}</div>
                   </div>
-                  <span class="tag ${tag.cls}">${tag.text}</span>
+                  <span class="tag ${tagClass}">${ev.status}</span>
                 </div>
                 <div class="mini-actions">
-                  <button class="small-btn gold" onclick="openAttendanceForStudent('${student.id}')">Mark Class</button>
-                  <button class="small-btn" onclick="openPaymentForStudent('${student.id}')">Payment</button>
-                  <button class="small-btn" onclick="openMapForStudent('${student.id}')">Map</button>
+                  ${isClass && ev.status === "scheduled" ? `
+                    <button class="small-btn gold" onclick="markScheduledDone('${ev.id}')">Done</button>
+                    <button class="small-btn" onclick="openRescheduleEvent('${ev.id}')">Reschedule</button>
+                    <button class="small-btn" onclick="cancelScheduleEvent('${ev.id}')">Cancel</button>
+                  ` : ""}
+                  ${ev.event_type === "payment" ? `
+                    <button class="small-btn gold" onclick="openPaymentForStudent('${ev.student_id}')">Send Link</button>
+                    <button class="small-btn" onclick="markPaymentEventPaid('${ev.id}','${ev.student_id}')">Mark Paid</button>
+                  ` : ""}
                 </div>
               </div>
             `;
-          }).join("")}
+          }).join("") : `<div class="empty-state">No schedule events today.</div>`}
         </div>
       </div>
     </div>
@@ -246,8 +269,8 @@ function renderHome(){
 
   byId("quickMarkClass").onclick = () => setView("attendance");
   byId("quickAddStudent").onclick = () => openModal("studentModal");
-  byId("quickCreateRenewal").onclick = () => setView("students");
-  byId("quickOpenRoute").onclick = () => setView("more");
+  byId("quickAddSchedule").onclick = openScheduleModal;
+  byId("quickOpenCalendar").onclick = () => setView("calendar");
 }
 
 function renderStudents(){
@@ -306,6 +329,7 @@ function renderStudents(){
               <button class="small-btn" onclick="openPackageForStudent('${student.id}')">Renew</button>
               <button class="small-btn" onclick="openPaymentForStudent('${student.id}')">Payment</button>
               <button class="small-btn" onclick="openMapForStudent('${student.id}')">Map</button>
+              <button class="small-btn" onclick="prefillScheduleForStudent('${student.id}')">Schedule</button>
             </div>
           </div>
         `;
@@ -323,6 +347,102 @@ function renderStudents(){
       state.studentFilter = btn.dataset.studentFilter;
       renderStudents();
     };
+  });
+}
+
+function filteredCalendarEvents(){
+  const today = todayISO();
+  let events = [...state.schedule_events];
+
+  if (state.calendarTab === "today") {
+    events = events.filter(e => e.event_date === today);
+  } else if (state.calendarTab === "week") {
+    const d = new Date();
+    const in7 = new Date();
+    in7.setDate(d.getDate() + 7);
+    const end = in7.toISOString().slice(0,10);
+    events = events.filter(e => e.event_date >= today && e.event_date <= end);
+  }
+
+  if (state.calendarFilter === "classes") events = events.filter(e => e.event_type === "class");
+  if (state.calendarFilter === "payments") events = events.filter(e => e.event_type === "payment");
+  if (state.calendarFilter === "rescheduled") events = events.filter(e => e.status === "rescheduled");
+  if (state.calendarFilter === "cancelled") events = events.filter(e => e.status === "cancelled");
+  if (state.calendarFilter === "completed") events = events.filter(e => e.status === "completed");
+
+  return events.sort((a,b) => `${a.event_date}${a.event_time || ""}`.localeCompare(`${b.event_date}${b.event_time || ""}`));
+}
+
+function renderCalendar(){
+  const events = filteredCalendarEvents();
+  let currentDate = "";
+
+  byId("view-calendar").innerHTML = `
+    <div class="card" style="padding:18px;">
+      <div class="row">
+        <div>
+          <h2 class="section-title">Calendar</h2>
+          <p class="section-sub">Classes, reschedules, cancellations, and payment due events.</p>
+        </div>
+        <button class="primary-btn" id="calendarAddBtn" style="width:120px;">Add</button>
+      </div>
+
+      <div class="chip-row">
+        ${[
+          ["agenda","Agenda"],["today","Today"],["week","Week"]
+        ].map(([val,label]) => `
+          <button class="chip ${state.calendarTab === val ? "active" : ""}" data-cal-tab="${val}">${label}</button>
+        `).join("")}
+      </div>
+
+      <div class="chip-row">
+        ${[
+          ["all","All"],["classes","Classes"],["payments","Payments"],["rescheduled","Rescheduled"],["cancelled","Cancelled"],["completed","Completed"]
+        ].map(([val,label]) => `
+          <button class="chip ${state.calendarFilter === val ? "active" : ""}" data-cal-filter="${val}">${label}</button>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="stack">
+      ${events.length ? events.map(ev => {
+        const student = state.students.find(s => Number(s.id) === Number(ev.student_id));
+        const typeTag = ev.event_type === "payment" ? "orange" : ev.status === "completed" ? "green" : ev.status === "cancelled" ? "red" : ev.status === "rescheduled" ? "orange" : "gold";
+        const header = currentDate !== ev.event_date ? (currentDate = ev.event_date, `<div class="agenda-day">${formatDatePretty(ev.event_date)}</div>`) : "";
+        return `
+          ${header}
+          <div class="card list-card">
+            <div class="row">
+              <div>
+                <div class="event-time">${formatTime(ev.event_time)}</div>
+                <div style="font-size:18px;font-weight:800;">${student?.student_name || ev.title || "Event"}</div>
+                <div class="meta">${capitalize(ev.event_type)} • ${ev.area || student?.area || "-"}<br>${ev.title || "-"}${ev.note ? `<br>Note: ${ev.note}` : ""}</div>
+              </div>
+              <span class="tag ${typeTag}">${ev.status}</span>
+            </div>
+            <div class="mini-actions">
+              ${ev.event_type === "class" && ev.status === "scheduled" ? `
+                <button class="small-btn gold" onclick="markScheduledDone('${ev.id}')">Done</button>
+                <button class="small-btn" onclick="openRescheduleEvent('${ev.id}')">Reschedule</button>
+                <button class="small-btn" onclick="cancelScheduleEvent('${ev.id}')">Cancel</button>
+              ` : ""}
+              ${ev.event_type === "payment" && ev.status !== "paid" ? `
+                <button class="small-btn gold" onclick="openPaymentForStudent('${ev.student_id}')">Send Link</button>
+                <button class="small-btn" onclick="markPaymentEventPaid('${ev.id}','${ev.student_id}')">Mark Paid</button>
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("") : `<div class="card list-card"><div class="empty-state">No calendar events found.</div></div>`}
+    </div>
+  `;
+
+  byId("calendarAddBtn").onclick = openScheduleModal;
+  document.querySelectorAll("[data-cal-tab]").forEach(btn => {
+    btn.onclick = () => { state.calendarTab = btn.dataset.calTab; renderCalendar(); };
+  });
+  document.querySelectorAll("[data-cal-filter]").forEach(btn => {
+    btn.onclick = () => { state.calendarFilter = btn.dataset.calFilter; renderCalendar(); };
   });
 }
 
@@ -369,7 +489,7 @@ function renderPayments(){
 
     <div class="stack">
       ${state.payments.length ? state.payments.map(p => {
-        const student = state.students.find(s => s.id === p.student_id);
+        const student = state.students.find(s => Number(s.id) === Number(p.student_id));
         return `
           <div class="card list-card">
             <div class="row">
@@ -383,7 +503,7 @@ function renderPayments(){
             <div class="kpi-line"><span>Date</span><span>${p.payment_date || "-"}</span></div>
             <div class="mini-actions">
               <button class="small-btn gold" onclick="openPaymentForStudent('${p.student_id}')">New Payment</button>
-              ${p.payment_link ? `<a class="small-btn" style="display:inline-flex;align-items:center;text-decoration:none;" href="${p.payment_link}" target="_blank">Link</a>` : ""}
+              ${p.payment_link ? `<button class="small-btn" onclick="window.open('${p.payment_link}','_self')">Open UPI</button>` : ""}
             </div>
           </div>
         `;
@@ -470,7 +590,7 @@ async function saveStudent(){
 }
 
 window.openAttendanceForStudent = function(studentId){
-  const student = state.students.find(s => s.id === Number(studentId));
+  const student = state.students.find(s => Number(s.id) === Number(studentId));
   if(!student) return;
   state.selectedAttendanceStudent = student;
 
@@ -485,7 +605,7 @@ window.openAttendanceForStudent = function(studentId){
 };
 
 window.quickAttendanceStatus = async function(studentId, status){
-  const student = state.students.find(s => s.id === Number(studentId));
+  const student = state.students.find(s => Number(s.id) === Number(studentId));
   const pkg = packageForStudent(student.id);
 
   await apiInsert("classes", {
@@ -501,6 +621,26 @@ window.quickAttendanceStatus = async function(studentId, status){
   await loadAllData();
   alert(`Marked ${status} for ${student.student_name}.`);
 };
+
+async function ensurePaymentEvent(studentId, packageId, amount, title, whenStatus = "pending"){
+  const existing = state.schedule_events.find(
+    e => Number(e.student_id) === Number(studentId) && Number(e.package_id) === Number(packageId) && e.event_type === "payment" && e.status !== "paid"
+  );
+  if (existing) return;
+
+  await apiInsert("schedule_events", {
+    student_id: studentId,
+    package_id: packageId,
+    event_type: "payment",
+    title: title || "Payment Due",
+    event_date: todayISO(),
+    event_time: "10:00",
+    duration_minutes: 15,
+    status: whenStatus,
+    area: "",
+    note: `Amount due: ₹${amount || 0}`
+  });
+}
 
 async function saveAttendance(sendMessage = false){
   const student = state.selectedAttendanceStudent;
@@ -523,15 +663,22 @@ async function saveAttendance(sendMessage = false){
 
   const used = Number(pkg.used_classes || 0) + 1;
   const remaining = Math.max(Number(pkg.total_classes || 8) - used, 0);
-  const status = used >= Number(pkg.total_classes || 8) ? "completed" : "active";
+  const pkgStatus = used >= Number(pkg.total_classes || 8) ? "completed" : "active";
   const payment_status = used >= Number(pkg.total_classes || 8) ? "pending" : pkg.payment_status;
 
   await apiUpdate("packages", "id", pkg.id, {
     used_classes: used,
     remaining_classes: remaining,
-    status,
+    status: pkgStatus,
     payment_status
   });
+
+  const scheduledEvent = state.schedule_events.find(
+    e => Number(e.student_id) === Number(student.id) && e.event_type === "class" && e.event_date === todayISO() && e.status === "scheduled"
+  );
+  if (scheduledEvent) {
+    await apiUpdate("schedule_events", "id", scheduledEvent.id, { status: "completed", note });
+  }
 
   if(student.format === "home"){
     await apiInsert("route_logs", {
@@ -546,6 +693,10 @@ async function saveAttendance(sendMessage = false){
     });
   }
 
+  if (used >= 7) {
+    await ensurePaymentEvent(student.id, pkg.id, pkg.amount, `${pkg.package_title} Payment Due`, used >= 8 ? "overdue" : "pending");
+  }
+
   closeModal("attendanceModal");
   await loadAllData();
 
@@ -558,7 +709,7 @@ async function saveAttendance(sendMessage = false){
 }
 
 window.openPackageForStudent = function(studentId){
-  const student = state.students.find(s => s.id === Number(studentId));
+  const student = state.students.find(s => Number(s.id) === Number(studentId));
   if(!student) return;
   state.selectedPackageStudent = student;
 
@@ -579,7 +730,7 @@ async function savePackage(){
     await apiUpdate("packages", "id", active.id, { status: "completed" });
   }
 
-  await apiInsert("packages", {
+  const rows = await apiInsert("packages", {
     student_id: student.id,
     package_title: byId("p_package_title").value.trim(),
     topic_focus: byId("p_topic_focus").value.trim(),
@@ -592,13 +743,29 @@ async function savePackage(){
     payment_status: "pending"
   });
 
+  const pkg = rows?.[0];
+  if (pkg) {
+    await apiInsert("schedule_events", {
+      student_id: student.id,
+      package_id: pkg.id,
+      event_type: "reminder",
+      title: `${pkg.package_title} Started`,
+      event_date: pkg.start_date || todayISO(),
+      event_time: "09:00",
+      duration_minutes: 15,
+      status: "pending",
+      area: student.area || "",
+      note: pkg.topic_focus || ""
+    });
+  }
+
   closeModal("packageModal");
   await loadAllData();
   alert(`Package created for ${student.student_name}.`);
 }
 
 window.openPaymentForStudent = function(studentId){
-  const student = state.students.find(s => s.id === Number(studentId));
+  const student = state.students.find(s => Number(s.id) === Number(studentId));
   if(!student) return;
   state.selectedPaymentStudent = student;
 
@@ -635,12 +802,7 @@ async function savePayment(){
   const amount = Number(byId("pay_amount").value || 0);
 
   const upiLink = byId("pay_method").value === "upi"
-    ? buildUpiLink({
-        amount,
-        title,
-        studentName: student.student_name,
-        note
-      })
+    ? buildUpiLink({ amount, title, studentName: student.student_name, note })
     : byId("pay_link").value.trim();
 
   byId("pay_link").value = upiLink;
@@ -659,6 +821,12 @@ async function savePayment(){
 
   if(pkg && byId("pay_status").value === "paid"){
     await apiUpdate("packages", "id", pkg.id, { payment_status: "paid" });
+    const paymentEvent = state.schedule_events.find(
+      e => Number(e.student_id) === Number(student.id) && Number(e.package_id) === Number(pkg.id) && e.event_type === "payment" && e.status !== "paid"
+    );
+    if (paymentEvent) {
+      await apiUpdate("schedule_events", "id", paymentEvent.id, { status: "paid", note: `Paid ₹${amount}` });
+    }
   }
 
   closeModal("paymentModal");
@@ -674,13 +842,7 @@ function openPaymentMessage(){
   const note = byId("pay_note").value.trim();
   const amount = byId("pay_amount").value || 0;
 
-  const upiLink = buildUpiLink({
-    amount,
-    title,
-    studentName: student.student_name,
-    note
-  });
-
+  const upiLink = buildUpiLink({ amount, title, studentName: student.student_name, note });
   byId("pay_link").value = upiLink;
 
   const message = `Hello, here is the next 8-class learning cycle for ${student.student_name}.
@@ -689,16 +851,161 @@ Focus: ${note || "Structured progress"}
 Package: ${title}
 Amount: ₹${amount}
 
-Payment link:
-${upiLink}
+UPI ID: ${BUSINESS_UPI_ID}
+Payee Name: ${BUSINESS_PAYEE_NAME}
+
+Please complete the payment via any UPI app and share confirmation once done.
 
 — Abhishek Sessions`;
 
   window.open(whatsappLink(student.whatsapp || student.phone, message), "_blank");
 }
 
+function openScheduleModal(){
+  byId("sch_student_id").innerHTML = state.students
+    .filter(s => s.status === "active")
+    .map(s => `<option value="${s.id}">${s.student_name}</option>`)
+    .join("");
+
+  const firstStudent = state.students.find(s => s.status === "active");
+  byId("sch_title").value = firstStudent ? `${firstStudent.student_name} Class` : "Class";
+  byId("sch_date").value = todayISO();
+  byId("sch_time").value = "16:00";
+  byId("sch_duration").value = "60";
+  byId("sch_area").value = firstStudent?.area || "";
+  byId("sch_note").value = "";
+  openModal("scheduleModal");
+}
+
+window.prefillScheduleForStudent = function(studentId){
+  openScheduleModal();
+  setTimeout(() => {
+    const student = state.students.find(s => Number(s.id) === Number(studentId));
+    if (!student) return;
+    byId("sch_student_id").value = student.id;
+    byId("sch_title").value = `${student.student_name} Class`;
+    byId("sch_area").value = student.area || "";
+  }, 50);
+};
+
+async function saveScheduleEvent(){
+  const studentId = Number(byId("sch_student_id").value);
+  const student = state.students.find(s => Number(s.id) === studentId);
+  const pkg = packageForStudent(studentId);
+
+  await apiInsert("schedule_events", {
+    student_id: studentId,
+    package_id: pkg?.id || null,
+    event_type: "class",
+    title: byId("sch_title").value.trim() || `${student?.student_name || "Student"} Class`,
+    event_date: byId("sch_date").value || todayISO(),
+    event_time: byId("sch_time").value || "16:00",
+    duration_minutes: Number(byId("sch_duration").value || 60),
+    status: "scheduled",
+    area: byId("sch_area").value.trim() || student?.area || "",
+    note: byId("sch_note").value.trim()
+  });
+
+  closeModal("scheduleModal");
+  await loadAllData();
+  alert("Class scheduled.");
+}
+
+window.openRescheduleEvent = function(eventId){
+  const ev = state.schedule_events.find(e => Number(e.id) === Number(eventId));
+  if(!ev) return;
+  state.selectedScheduleEvent = ev;
+
+  const student = state.students.find(s => Number(s.id) === Number(ev.student_id));
+  byId("rescheduleMeta").innerHTML = `<strong>${student?.student_name || "Student"}</strong><br>${formatDatePretty(ev.event_date)} • ${formatTime(ev.event_time)}`;
+  byId("re_date").value = ev.event_date || todayISO();
+  byId("re_time").value = ev.event_time || "16:00";
+  byId("re_note").value = "";
+  openModal("rescheduleModal");
+};
+
+async function saveReschedule(){
+  const ev = state.selectedScheduleEvent;
+  if(!ev) return;
+
+  await apiUpdate("schedule_events", "id", ev.id, {
+    status: "rescheduled",
+    note: byId("re_note").value.trim() || "Rescheduled"
+  });
+
+  await apiInsert("schedule_events", {
+    student_id: ev.student_id,
+    package_id: ev.package_id,
+    event_type: "class",
+    title: ev.title,
+    event_date: byId("re_date").value || todayISO(),
+    event_time: byId("re_time").value || "16:00",
+    duration_minutes: ev.duration_minutes || 60,
+    status: "scheduled",
+    area: ev.area || "",
+    note: byId("re_note").value.trim() || ""
+  });
+
+  closeModal("rescheduleModal");
+  await loadAllData();
+  alert("Class rescheduled.");
+}
+
+window.cancelScheduleEvent = async function(eventId){
+  await apiUpdate("schedule_events", "id", eventId, {
+    status: "cancelled"
+  });
+  await loadAllData();
+  alert("Class cancelled.");
+};
+
+window.markScheduledDone = async function(eventId){
+  const ev = state.schedule_events.find(e => Number(e.id) === Number(eventId));
+  if(!ev) return;
+  const student = state.students.find(s => Number(s.id) === Number(ev.student_id));
+  if(!student) return;
+
+  state.selectedAttendanceStudent = student;
+  byId("attendanceStudentMeta").innerHTML = `
+    <strong>${student.student_name}</strong><br>
+    ${student.area || "-"} • ${student.instrument || "-"}<br>
+    Scheduled Time: ${formatTime(ev.event_time)}
+  `;
+  byId("attendanceNote").value = ev.note || "";
+  openModal("attendanceModal");
+};
+
+window.markPaymentEventPaid = async function(eventId, studentId){
+  const student = state.students.find(s => Number(s.id) === Number(studentId));
+  const pkg = packageForStudent(studentId);
+
+  await apiUpdate("schedule_events", "id", eventId, {
+    status: "paid",
+    note: "Marked paid manually"
+  });
+
+  if (pkg) {
+    await apiUpdate("packages", "id", pkg.id, { payment_status: "paid" });
+  }
+
+  await apiInsert("payments", {
+    student_id: Number(studentId),
+    package_id: pkg?.id || null,
+    amount: pkg?.amount || 0,
+    status: "paid",
+    payment_method: "upi",
+    payment_date: todayISO(),
+    payment_link: "",
+    payment_title: pkg?.package_title || "Package Payment",
+    payment_note: "Marked paid from calendar"
+  });
+
+  await loadAllData();
+  alert(`Payment marked paid for ${student?.student_name || "student"}.`);
+};
+
 window.openMapForStudent = function(studentId){
-  const student = state.students.find(s => s.id === Number(studentId));
+  const student = state.students.find(s => Number(s.id) === Number(studentId));
   if(!student) return;
   if(student.maps_link){
     window.open(student.maps_link, "_blank");
@@ -711,15 +1018,18 @@ window.openMapForStudent = function(studentId){
 
 function exportSummary(){
   const active = state.students.filter(s => s.status === "active").length;
-  const pendingRenewals = state.packages.filter(p => p.status === "active" && p.used_classes >= 7).length;
+  const pendingRenewals = state.packages.filter(p => p.status === "active" && Number(p.used_classes) >= 7).length;
   const overdue = state.payments.filter(p => p.status === "overdue").length;
   const totalDistance = state.route_logs.reduce((sum, r) => sum + Number(r.distance_km || 0), 0);
-  const text = `Abhishek Sessions Admin Summary\n\nActive students: ${active}\nPending renewals: ${pendingRenewals}\nOverdue payments: ${overdue}\nDistance logged: ${totalDistance.toFixed(1)} km`;
+  const text = `Abhishek Sessions Admin Summary
+
+Active students: ${active}
+Pending renewals: ${pendingRenewals}
+Overdue payments: ${overdue}
+Distance logged: ${totalDistance.toFixed(1)} km`;
   navigator.clipboard.writeText(text);
   alert("Summary copied.");
 }
-
-function capitalize(v){ return (v || "").charAt(0).toUpperCase() + (v || "").slice(1); }
 
 byId("saveStudentBtn").onclick = saveStudent;
 byId("saveAttendanceBtn").onclick = () => saveAttendance(false);
@@ -727,6 +1037,8 @@ byId("saveAttendanceSendBtn").onclick = () => saveAttendance(true);
 byId("savePackageBtn").onclick = savePackage;
 byId("savePaymentBtn").onclick = savePayment;
 byId("openPaymentMessageBtn").onclick = openPaymentMessage;
+byId("saveScheduleBtn").onclick = saveScheduleEvent;
+byId("saveRescheduleBtn").onclick = saveReschedule;
 byId("refreshBtn").onclick = loadAllData;
 
 loadAllData();

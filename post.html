@@ -189,7 +189,9 @@ document.getElementById("meta-title").innerText = title;
 document.getElementById("meta-desc").content = excerpt;
 document.getElementById("meta-keywords").content = keywords;
 
-let content = text.split("---")[2];
+let content = text.split("keywords:")[1];
+
+content = content.replace(/^"(.*)"/,'');
 
 content = content
 .replace(/^### (.*$)/gim,"<h3>$1</h3>")

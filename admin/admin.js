@@ -1,6 +1,16 @@
 const SUPABASE_URL = "https://acuzccqiwzelpllblags.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_46elweHoFHMZOzYvzZRqJw_gXUyfOrc";
 
+const BUSINESS_UPI_ID = "7011328912@pthdfc";
+const BUSINESS_PAYEE_NAME = "Abhishek Sessions";
+
+function buildUpiLink({ amount, title, studentName, note }) {
+  const cleanAmount = Number(amount || 0).toFixed(2);
+  const txnNote = `${title}${studentName ? " - " + studentName : ""}${note ? " | " + note : ""}`;
+
+  return `upi://pay?pa=${encodeURIComponent(BUSINESS_UPI_ID)}&pn=${encodeURIComponent(BUSINESS_PAYEE_NAME)}&am=${encodeURIComponent(cleanAmount)}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
+}
+
 const headers = {
   apikey: SUPABASE_ANON_KEY,
   Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
@@ -593,14 +603,24 @@ window.openPaymentForStudent = function(studentId){
   state.selectedPaymentStudent = student;
 
   const active = packageForStudent(student.id);
+  const title = active?.package_title || `${new Date().toLocaleString("default",{month:"long"})} Learning Cycle`;
+  const note = active?.topic_focus || "";
+  const amount = active?.amount || student.fee_per_package || "";
+
   byId("pay_student_name").value = student.student_name;
-  byId("pay_title").value = active?.package_title || `${new Date().toLocaleString("default",{month:"long"})} Learning Cycle`;
-  byId("pay_note").value = active?.topic_focus || "";
-  byId("pay_amount").value = active?.amount || student.fee_per_package || "";
+  byId("pay_title").value = title;
+  byId("pay_note").value = note;
+  byId("pay_amount").value = amount;
   byId("pay_status").value = "pending";
   byId("pay_method").value = "upi";
-  byId("pay_link").value = "";
   byId("pay_date").value = todayISO();
+
+  byId("pay_link").value = buildUpiLink({
+    amount,
+    title,
+    studentName: student.student_name,
+    note
+  });
 
   openModal("paymentModal");
 };
@@ -610,16 +630,31 @@ async function savePayment(){
   if(!student) return;
   const pkg = packageForStudent(student.id);
 
+  const title = byId("pay_title").value.trim();
+  const note = byId("pay_note").value.trim();
+  const amount = Number(byId("pay_amount").value || 0);
+
+  const upiLink = byId("pay_method").value === "upi"
+    ? buildUpiLink({
+        amount,
+        title,
+        studentName: student.student_name,
+        note
+      })
+    : byId("pay_link").value.trim();
+
+  byId("pay_link").value = upiLink;
+
   await apiInsert("payments", {
     student_id: student.id,
     package_id: pkg?.id || null,
-    amount: Number(byId("pay_amount").value || 0),
+    amount,
     status: byId("pay_status").value,
     payment_method: byId("pay_method").value,
     payment_date: byId("pay_date").value || todayISO(),
-    payment_link: byId("pay_link").value.trim(),
-    payment_title: byId("pay_title").value.trim(),
-    payment_note: byId("pay_note").value.trim()
+    payment_link: upiLink,
+    payment_title: title,
+    payment_note: note
   });
 
   if(pkg && byId("pay_status").value === "paid"){
@@ -635,7 +670,29 @@ function openPaymentMessage(){
   const student = state.selectedPaymentStudent;
   if(!student) return;
 
-  const message = `Hello, here is the next 8-class learning cycle for ${student.student_name}.\n\nFocus: ${byId("pay_note").value.trim() || "Structured progress"}\nPackage: ${byId("pay_title").value.trim()}\nAmount: ₹${byId("pay_amount").value || 0}\n\nPlease use the payment link below to confirm the next cycle.\n${byId("pay_link").value.trim() || ""}\n\n— Abhishek Sessions`;
+  const title = byId("pay_title").value.trim();
+  const note = byId("pay_note").value.trim();
+  const amount = byId("pay_amount").value || 0;
+
+  const upiLink = buildUpiLink({
+    amount,
+    title,
+    studentName: student.student_name,
+    note
+  });
+
+  byId("pay_link").value = upiLink;
+
+  const message = `Hello, here is the next 8-class learning cycle for ${student.student_name}.
+
+Focus: ${note || "Structured progress"}
+Package: ${title}
+Amount: ₹${amount}
+
+Payment link:
+${upiLink}
+
+— Abhishek Sessions`;
 
   window.open(whatsappLink(student.whatsapp || student.phone, message), "_blank");
 }

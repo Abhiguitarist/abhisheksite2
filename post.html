@@ -1,225 +1,830 @@
+Replace these 2 files completely and stop changing anything else.
+
+⸻
+
+blog.html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title id="meta-title">Abhishek Sessions</title>
-
-<meta name="description" id="meta-desc">
-<meta name="keywords" id="meta-keywords">
-
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
-<style>
-
-body{
-background:#0b0b0b;
-color:#eaeaea;
-font-family:Inter,sans-serif;
-margin:0;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:40px 20px;
-}
-
-h1{
-font-family:"Playfair Display";
-font-size:42px;
-margin-bottom:10px;
-}
-
-.date{
-opacity:.6;
-margin-bottom:30px;
-}
-
-.featured{
-width:100%;
-border-radius:12px;
-margin:30px 0;
-}
-
-.article{
-line-height:1.9;
-font-size:18px;
-}
-
-.article h2{
-margin-top:40px;
-font-family:"Playfair Display";
-}
-
-.cta{
-margin-top:60px;
-background:#151515;
-padding:30px;
-border-radius:10px;
-text-align:center;
-}
-
-.cta a{
-background:#c8a96a;
-padding:14px 26px;
-border-radius:6px;
-text-decoration:none;
-color:#000;
-font-weight:600;
-}
-
-.social{
-margin-top:50px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.social div{
-background:#151515;
-padding:20px;
-border-radius:10px;
-}
-
-.related{
-margin-top:60px;
-}
-
-.related a{
-display:block;
-padding:15px;
-background:#151515;
-margin-bottom:10px;
-border-radius:8px;
-color:#eaeaea;
-text-decoration:none;
-}
-
-.whatsapp-sticky{
-position:fixed;
-bottom:25px;
-right:25px;
-background:#25D366;
-color:white;
-padding:16px 20px;
-border-radius:40px;
-text-decoration:none;
-font-weight:600;
-box-shadow:0 10px 30px rgba(0,0,0,.4);
-}
-
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog | Abhishek Sessions</title>
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --card:#12121a;
+      --text:#e9e9ee;
+      --muted:#b8b8c6;
+      --gold:#d4af37;
+      --line:rgba(212,175,55,.22);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% 0%, rgba(212,175,55,.10), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(212,175,55,.08), transparent 60%),
+        var(--bg);
+      color:var(--text);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:28px 18px 64px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:26px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      padding:10px 12px;border:1px solid var(--line);border-radius:14px;
+      background: rgba(18,18,26,.55);backdrop-filter: blur(8px);
+    }
+    .mark{
+      width:44px;height:44px;border-radius:14px;
+      border:1px solid var(--line);
+      display:grid;place-items:center;
+      color:var(--gold);font-weight:800;letter-spacing:.5px;
+      background: rgba(212,175,55,.06);
+    }
+    .brand h1{font-size:16px;margin:0;letter-spacing:.6px}
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .btn{
+      text-decoration:none;color:var(--bg);
+      background: linear-gradient(180deg, #f2d27a, var(--gold));
+      padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;
+      border:1px solid rgba(0,0,0,.25);
+      box-shadow: 0 10px 24px rgba(212,175,55,.18);
+      white-space:nowrap;
+    }
+    .hero{
+      padding:26px 22px;border:1px solid var(--line);border-radius:18px;
+      background: rgba(18,18,26,.55);backdrop-filter: blur(8px);
+      margin-bottom:18px;
+    }
+    .hero h2{
+      margin:0 0 10px;
+      font-size:34px;
+      letter-spacing:.2px;
+      font-family: "Playfair Display", Georgia, serif;
+    }
+    .hero .sub{
+      margin:0;
+      color:var(--muted);
+      max-width:72ch;
+      line-height:1.6
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:20px
+    }
+    .card{
+      border:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:18px;
+      padding:18px;
+      transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+    }
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:var(--line);
+      box-shadow:0 12px 30px rgba(0,0,0,.25);
+    }
+    .tag{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--gold);
+      font-size:12px;
+      font-weight:700;
+      background: rgba(212,175,55,.06);
+      margin-bottom:12px;
+    }
+    .card h3{
+      margin:6px 0 10px;
+      font-size:22px;
+      line-height:1.3;
+      font-family: "Playfair Display", Georgia, serif;
+    }
+    .meta{
+      color:var(--muted);
+      font-size:14px;
+      margin:0 0 14px;
+      line-height:1.6
+    }
+    .card a{
+      color:var(--text);
+      text-decoration:none
+    }
+    .read{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--gold);
+      font-weight:700;
+      font-size:14px;
+    }
+    .empty{
+      border:1px dashed rgba(212,175,55,.22);
+      border-radius:16px;
+      padding:18px;
+      color:var(--muted);
+      background: rgba(212,175,55,.04);
+      margin-top:16px;
+    }
+    footer{
+      margin-top:28px;
+      color:var(--muted);
+      font-size:12px;
+      opacity:.9
+    }
+    @media (max-width:820px){
+      .grid{grid-template-columns:1fr}
+      .hero h2{font-size:28px}
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mark">AS</div>
+        <div>
+          <h1>ABHISHEK SESSIONS</h1>
+          <p>Blog • Guitar • Piano • Performance</p>
+        </div>
+      </div>
+      <a class="btn" href="/">Back to Website</a>
+    </div>
 
+    <section class="hero">
+      <h2>Abhishek Sessions Blog</h2>
+      <p class="sub">
+        Practical insights on learning music — guitar technique, piano skills, practice systems,
+        buying guidance, stage confidence, and performance growth.
+      </p>
+
+      <div class="grid" id="blogGrid"></div>
+
+      <div class="empty" id="emptyState" style="display:none;">
+        No blog posts are live yet. Once the next article is generated, it will appear here automatically.
+      </div>
+    </section>
+
+    <footer>
+      ©️ <span id="y"></span> Abhishek Sessions • Formerly Musicphonetics • MSME Registered
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    (async function(){
+      const grid = document.getElementById("blogGrid");
+      const empty = document.getElementById("emptyState");
+
+      try{
+        const res = await fetch("/blog/index.json", { cache: "no-store" });
+        const data = await res.json();
+
+        const posts = Array.isArray(data?.posts) ? data.posts : [];
+        const cleanPosts = posts.filter(p =>
+          p &&
+          typeof p.title === "string" &&
+          p.title.trim() &&
+          typeof p.url === "string" &&
+          p.url.trim()
+        );
+
+        if(!cleanPosts.length){
+          grid.innerHTML = "";
+          empty.style.display = "block";
+          return;
+        }
+
+        grid.innerHTML = cleanPosts.map(p => `
+          <article class="card">
+            <div class="tag">Latest • ${p.date || "Update"}</div>
+            <h3>
+              <a href="/post.html?post=${encodeURIComponent(p.url)}">${p.title}</a>
+            </h3>
+            <p class="meta">${p.excerpt || "Practical tip for your music journey."}</p>
+            <a class="read" href="/post.html?post=${encodeURIComponent(p.url)}"><span>Read article</span> →</a>
+          </article>
+        `).join("");
+
+      }catch(e){
+        grid.innerHTML = "";
+        empty.style.display = "block";
+      }
+    })();
+  </script>
+</body>
+</html>
+
+
+⸻
+
+post.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abhishek Sessions</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --panel:#12121a;
+      --panel-2:#171722;
+      --text:#ececf2;
+      --muted:#b9b9c7;
+      --gold:#d4af37;
+      --line:rgba(212,175,55,.22);
+      --wa:#25D366;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 700px at 10% 0%, rgba(212,175,55,.08), transparent 60%),
+        radial-gradient(1000px 600px at 90% 10%, rgba(212,175,55,.06), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      line-height:1.7;
+    }
+    .shell{
+      max-width:1200px;
+      margin:0 auto;
+      padding:24px 18px 80px;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:22px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:rgba(18,18,26,.55);
+      backdrop-filter:blur(8px);
+    }
+    .mark{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      color:var(--gold);
+      font-weight:800;
+      letter-spacing:.5px;
+      background:rgba(212,175,55,.06);
+    }
+    .brand h1{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.6px;
+    }
+    .brand p{
+      margin:2px 0 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .btn{
+      text-decoration:none;
+      color:var(--bg);
+      background:linear-gradient(180deg,#f2d27a,var(--gold));
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:700;
+      font-size:13px;
+      border:1px solid rgba(0,0,0,.25);
+      box-shadow:0 10px 24px rgba(212,175,55,.18);
+      white-space:nowrap;
+    }
+    .hero{
+      border:1px solid var(--line);
+      border-radius:24px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      box-shadow:0 18px 50px rgba(0,0,0,.25);
+    }
+    .hero-inner{
+      padding:34px 24px 28px;
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--gold);
+      font-size:12px;
+      font-weight:700;
+      background:rgba(212,175,55,.06);
+      margin-bottom:14px;
+    }
+    .hero h2{
+      margin:0 0 14px;
+      font-family:"Playfair Display",Georgia,serif;
+      font-size:44px;
+      line-height:1.14;
+      letter-spacing:.2px;
+      max-width:14ch;
+    }
+    .lede{
+      margin:0;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.75;
+      max-width:70ch;
+    }
+    .meta-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+    .meta-chip{
+      padding:8px 12px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .featured{
+      display:none;
+      width:100%;
+      max-height:460px;
+      object-fit:cover;
+      border-top:1px solid rgba(255,255,255,.06);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .layout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 300px;
+      gap:24px;
+      margin-top:26px;
+      align-items:start;
+    }
+    .article-wrap{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      overflow:hidden;
+    }
+    .article{
+      padding:30px 24px 34px;
+      font-size:18px;
+      line-height:1.9;
+    }
+    .article h1,
+    .article h2,
+    .article h3{
+      font-family:"Playfair Display",Georgia,serif;
+      line-height:1.25;
+      margin:34px 0 14px;
+      color:#fff;
+    }
+    .article h2{font-size:31px}
+    .article h3{font-size:24px}
+    .article p{
+      margin:0 0 16px;
+      color:#e7e7ef;
+    }
+    .article ul{
+      margin:0 0 22px 20px;
+      padding:0;
+    }
+    .article li{
+      margin:0 0 10px;
+    }
+    .article strong{
+      color:#fff;
+    }
+    .callout{
+      border:1px solid var(--line);
+      background:rgba(212,175,55,.05);
+      border-radius:18px;
+      padding:18px 18px;
+      margin:24px 0;
+    }
+    .callout-title{
+      color:var(--gold);
+      font-weight:800;
+      letter-spacing:.2px;
+      margin-bottom:6px;
+    }
+    .sidebar{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      position:sticky;
+      top:18px;
+    }
+    .side-card{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      padding:18px;
+    }
+    .side-card h3{
+      margin:0 0 10px;
+      font-size:18px;
+      font-family:"Playfair Display",Georgia,serif;
+    }
+    .side-card p{
+      margin:0 0 12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+    .side-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--gold);
+      font-weight:700;
+      text-decoration:none;
+      font-size:14px;
+    }
+    .cta{
+      margin-top:24px;
+      border:1px solid var(--line);
+      background:rgba(212,175,55,.05);
+      border-radius:22px;
+      padding:24px;
+      text-align:center;
+    }
+    .cta h3{
+      margin:0 0 10px;
+      font-size:28px;
+      font-family:"Playfair Display",Georgia,serif;
+    }
+    .cta p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.75;
+    }
+    .cta a{
+      display:inline-block;
+      background:linear-gradient(180deg,#f2d27a,var(--gold));
+      color:#000;
+      text-decoration:none;
+      padding:14px 24px;
+      border-radius:12px;
+      font-weight:700;
+      box-shadow:0 10px 24px rgba(212,175,55,.18);
+    }
+    .related{
+      margin-top:24px;
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      padding:22px;
+    }
+    .related h3{
+      margin:0 0 16px;
+      font-size:26px;
+      font-family:"Playfair Display",Georgia,serif;
+    }
+    .related-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .related-item{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:16px;
+      padding:16px;
+      text-decoration:none;
+      color:var(--text);
+      background:rgba(255,255,255,.02);
+    }
+    .related-item:hover{
+      border-color:var(--line);
+      transform:translateY(-1px);
+    }
+    .related-item small{
+      display:block;
+      color:var(--gold);
+      margin-bottom:8px;
+      font-weight:700;
+    }
+    .related-item strong{
+      display:block;
+      font-size:16px;
+      line-height:1.5;
+      margin-bottom:8px;
+    }
+    .related-item span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+    .whatsapp-sticky{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      background:var(--wa);
+      color:#fff;
+      text-decoration:none;
+      padding:14px 18px;
+      border-radius:999px;
+      font-weight:700;
+      box-shadow:0 14px 30px rgba(0,0,0,.35);
+      z-index:20;
+    }
+    .hidden{display:none !important}
+    @media (max-width:980px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .related-grid{grid-template-columns:1fr}
+      .hero h2{font-size:34px;max-width:none}
+    }
+    @media (max-width:640px){
+      .article{padding:24px 18px 28px;font-size:17px}
+      .hero-inner{padding:28px 18px 22px}
+      .hero h2{font-size:30px}
+      .lede{font-size:16px}
+      .whatsapp-sticky{left:14px;right:14px;bottom:14px;text-align:center}
+    }
+  </style>
+</head>
 <body>
 
-<div class="container">
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mark">AS</div>
+        <div>
+          <h1>ABHISHEK SESSIONS</h1>
+          <p>Blog • Guitar • Piano • Performance</p>
+        </div>
+      </div>
+      <a class="btn" href="/blog.html">Back to Blog</a>
+    </div>
 
-<h1 id="title"></h1>
-<div class="date" id="date"></div>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">Insights • Premium Learning Notes</div>
+        <h2 id="title">Loading article...</h2>
+        <p class="lede" id="excerpt">Please wait while the article loads.</p>
 
-<img id="featured" class="featured">
+        <div class="meta-row">
+          <div class="meta-chip" id="date">Date</div>
+          <div class="meta-chip">Abhishek Sessions</div>
+          <div class="meta-chip">Structured Music Mentorship</div>
+        </div>
+      </div>
 
-<div id="content" class="article"></div>
+      <img id="featured" class="featured hidden" alt="Featured article image" />
+    </section>
 
-<div class="social">
+    <div class="layout">
+      <div>
+        <div class="article-wrap">
+          <article id="content" class="article"></article>
+        </div>
 
-<div>
-<h3>Follow on Instagram</h3>
-<p>Daily guitar reels and tips</p>
-<a href="https://instagram.com/">Open Instagram</a>
-</div>
+        <div class="cta">
+          <h3>Need structured guitar mentorship?</h3>
+          <p>
+            Private one-to-one guitar mentorship by Abhishek Sessions across Delhi and online.
+            If you want clarity, discipline, and long-term progress, message directly.
+          </p>
+          <a href="https://wa.me/917011328912" target="_blank" rel="noopener">Message on WhatsApp</a>
+        </div>
 
-<div>
-<h3>Watch on YouTube</h3>
-<p>Song breakdowns and training</p>
-<a href="#">Open YouTube</a>
-</div>
+        <section class="related">
+          <h3>Related Articles</h3>
+          <div class="related-grid" id="related-posts"></div>
+        </section>
+      </div>
 
-</div>
+      <aside class="sidebar">
+        <div class="side-card">
+          <h3>Follow on Instagram</h3>
+          <p>Daily guitar reels, stage clips, and quick music tips from Abhishek Sessions.</p>
+          <a class="side-link" href="https://instagram.com/abhisheksessions" target="_blank" rel="noopener">Open Instagram →</a>
+        </div>
 
-<div class="cta">
+        <div class="side-card">
+          <h3>Watch on YouTube</h3>
+          <p>Song breakdowns, learning guidance, and performance-driven teaching insights.</p>
+          <a class="side-link" href="https://youtube.com/@abhisheksessions" target="_blank" rel="noopener">Open YouTube →</a>
+        </div>
 
-<h3>Want structured guitar mentorship?</h3>
+        <div class="side-card">
+          <h3>Why readers convert here</h3>
+          <p>Cheap training costs later in confidence. Structured teaching saves time, money, and frustration.</p>
+          <a class="side-link" href="https://wa.me/917011328912" target="_blank" rel="noopener">Ask before you choose →</a>
+        </div>
+      </aside>
+    </div>
+  </div>
 
-<p>
-Private one-to-one guitar mentorship by Abhishek Sessions.
-</p>
+  <a class="whatsapp-sticky" href="https://wa.me/917011328912" target="_blank" rel="noopener">Chat on WhatsApp</a>
 
-<a href="https://wa.me/">Message on WhatsApp</a>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const rawPost = params.get("post") || "";
+    const file = decodeURIComponent(rawPost);
 
-</div>
+    function escapeHtml(str){
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
 
-<div class="related">
+    function parseFrontMatter(text){
+      const lines = text.split("\n");
+      const meta = {
+        title: "",
+        date: "",
+        slug: "",
+        excerpt: "",
+        keywords: "",
+        image: ""
+      };
 
-<h3>Related Articles</h3>
+      let contentStart = 0;
 
-<div id="related-posts"></div>
+      for(let i = 0; i < lines.length; i++){
+        const line = lines[i].trim();
 
-</div>
+        if(!line){
+          contentStart = i + 1;
+          break;
+        }
 
-</div>
+        const match = line.match(/^([a-zA-Z]+):\s*"(.*)"$/);
+        if(match){
+          const key = match[1].toLowerCase();
+          const value = match[2];
+          if(key in meta) meta[key] = value;
+        }
+      }
 
-<a class="whatsapp-sticky" href="https://wa.me/">
-Chat on WhatsApp
-</a>
+      return {
+        meta,
+        content: lines.slice(contentStart).join("\n").trim()
+      };
+    }
 
-<script>
+    function markdownToHtml(md){
+      const lines = md.split("\n");
+      let html = "";
+      let inList = false;
 
-const params = new URLSearchParams(window.location.search);
-const file = params.get("post");
+      for(let rawLine of lines){
+        const line = rawLine.trim();
 
-fetch(file)
-.then(r=>r.text())
-.then(text=>{
+        if(!line){
+          if(inList){
+            html += "</ul>";
+            inList = false;
+          }
+          continue;
+        }
 
-let title = text.match(/title:\s*"(.+)"/)[1];
-let date = text.match(/date:\s*"(.+)"/)[1];
-let excerpt = text.match(/excerpt:\s*"(.+)"/)[1];
-let keywords = text.match(/keywords:\s*"(.+)"/)[1];
+        if(line.startsWith("### ")){
+          if(inList){ html += "</ul>"; inList = false; }
+          html += `<h3>${escapeHtml(line.replace(/^### /, ""))}</h3>`;
+          continue;
+        }
 
-document.getElementById("title").innerText = title;
-document.getElementById("date").innerText = date;
+        if(line.startsWith("## ")){
+          if(inList){ html += "</ul>"; inList = false; }
+          html += `<h2>${escapeHtml(line.replace(/^## /, ""))}</h2>`;
+          continue;
+        }
 
-document.getElementById("meta-title").innerText = title;
-document.getElementById("meta-desc").content = excerpt;
-document.getElementById("meta-keywords").content = keywords;
+        if(line.startsWith("- ")){
+          if(!inList){
+            html += "<ul>";
+            inList = true;
+          }
+          html += `<li>${escapeHtml(line.replace(/^- /, ""))}</li>`;
+          continue;
+        }
 
-let content = text.split("keywords:")[1];
+        if(inList){
+          html += "</ul>";
+          inList = false;
+        }
 
-content = content.replace(/^"(.*)"/,'');
+        let formatted = escapeHtml(line)
+          .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
-content = content
-.replace(/^### (.*$)/gim,"<h3>$1</h3>")
-.replace(/^## (.*$)/gim,"<h2>$1</h2>")
-.replace(/^\- (.*$)/gim,"<li>$1</li>")
-.replace(/\n/g,"<br>");
+        html += `<p>${formatted}</p>`;
+      }
 
-document.getElementById("content").innerHTML = content;
+      if(inList) html += "</ul>";
 
-});
+      return html;
+    }
 
-fetch("/blog/index.json")
-.then(r=>r.json())
-.then(data=>{
+    async function loadArticle(){
+      if(!file){
+        document.getElementById("title").textContent = "Article not found";
+        document.getElementById("excerpt").textContent = "No article path was provided.";
+        document.getElementById("content").innerHTML = "<p>Please return to the blog page and open an article again.</p>";
+        return;
+      }
 
-let posts = data.posts.slice(0,3);
+      try{
+        const res = await fetch(file, { cache: "no-store" });
+        const text = await res.text();
 
-let html="";
+        const { meta, content } = parseFrontMatter(text);
 
-posts.forEach(p=>{
-html += `<a href="/post.html?post=${p.url}">${p.title}</a>`
-})
+        document.title = meta.title ? `${meta.title} | Abhishek Sessions` : "Abhishek Sessions";
+        document.querySelector('meta[name="description"]').setAttribute("content", meta.excerpt || "");
+        document.querySelector('meta[name="keywords"]').setAttribute("content", meta.keywords || "");
 
-document.getElementById("related-posts").innerHTML = html;
+        document.getElementById("title").textContent = meta.title || "Untitled Article";
+        document.getElementById("date").textContent = meta.date || "Latest Update";
+        document.getElementById("excerpt").textContent = meta.excerpt || "Practical insight from Abhishek Sessions.";
 
-});
+        const featured = document.getElementById("featured");
+        if(meta.image){
+          featured.src = meta.image;
+          featured.classList.remove("hidden");
+        }
 
-</script>
+        let articleHtml = markdownToHtml(content);
 
+        articleHtml = articleHtml.replace(
+          /<h3>(Quick tip|Why this matters|Want structured progress\?)<\/h3>/i,
+          `<div class="callout"><div class="callout-title">$1</div>`
+        );
+
+        if(articleHtml.includes('<div class="callout">') && !articleHtml.includes("</div></div>")){
+          articleHtml += "</div>";
+        }
+
+        document.getElementById("content").innerHTML = articleHtml;
+
+      }catch(err){
+        document.getElementById("title").textContent = "Unable to load article";
+        document.getElementById("excerpt").textContent = "The blog post could not be loaded right now.";
+        document.getElementById("content").innerHTML = "<p>Please try again in a moment.</p>";
+      }
+    }
+
+    async function loadRelated(){
+      try{
+        const res = await fetch("/blog/index.json", { cache: "no-store" });
+        const data = await res.json();
+        const posts = Array.isArray(data?.posts) ? data.posts : [];
+        const related = posts.filter(p => p && p.url && p.url !== file).slice(0, 4);
+
+        const box = document.getElementById("related-posts");
+
+        if(!related.length){
+          box.innerHTML = `<div class="related-item"><strong>More articles coming soon.</strong><span>Your next blog updates will appear here automatically.</span></div>`;
+          return;
+        }
+
+        box.innerHTML = related.map(p => `
+          <a class="related-item" href="/post.html?post=${encodeURIComponent(p.url)}">
+            <small>${p.date || "Latest"}</small>
+            <strong>${p.title || "Untitled"}</strong>
+            <span>${p.excerpt || "Practical music insight from Abhishek Sessions."}</span>
+          </a>
+        `).join("");
+
+      }catch(err){
+        document.getElementById("related-posts").innerHTML = `<div class="related-item"><strong>Related posts unavailable.</strong><span>Please check again shortly.</span></div>`;
+      }
+    }
+
+    loadArticle();
+    loadRelated();
+  </script>
 </body>
 </html>

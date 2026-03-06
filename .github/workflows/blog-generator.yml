@@ -2,167 +2,164 @@ name: Daily Blog Generator
 
 on:
   schedule:
-    - cron: "0 3 * * *" # daily (UTC). India time ~ 8:30 AM
+    - cron: "0 3 * * *" # 03:00 UTC = 08:30 IST
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  generate:
+  generate_blog:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Generate blog post + update index.json
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate blog post and rebuild index.json
         run: |
-          set -e
-
-          mkdir -p blog
-
-          DATE=$(date +'%Y-%m-%d')
-
-          # Rotate topics by day (1-10)
-          DAY_INDEX=$(( (10#$(date +'%d') - 1) % 10 ))
-
-          TITLES=(
-            "How to Choose the Best Guitar Teacher (Avoid These 5 Mistakes)"
-            "Best Guitar for Beginners in India (Complete Buying Guide)"
-            "Guitar String Guide: Which Strings Are Best for Beginners?"
-            "10 Easy Guitar Songs Every Beginner Should Learn"
-            "Guitar Pick Sizes Explained (Most Beginners Use the Wrong One)"
-            "What is a Chord Family? (Secret Behind Most Songs)"
-            "How to Learn Guitar Faster (Practice Routine That Works)"
-            "Why Many Guitar Students Quit (And How to Avoid It)"
-            "Top 10 Viral Guitar Songs Everyone Loves Playing"
-            "Acoustic vs Electric Guitar: Which One Should You Learn First?"
-          )
-
-          SLUGS=(
-            "best-guitar-teacher"
-            "best-guitar-for-beginners-india"
-            "best-guitar-strings-for-beginners"
-            "easy-guitar-songs-for-beginners"
-            "best-guitar-pick-for-beginners"
-            "guitar-chord-family-explained"
-            "learn-guitar-faster-practice-routine"
-            "why-guitar-students-quit"
-            "viral-guitar-songs"
-            "acoustic-vs-electric-guitar"
-          )
-
-          EXCERPTS=(
-            "A simple checklist to pick the right mentor and avoid wasting months."
-            "A practical buying guide for choosing your first guitar in India."
-            "Gauge, feel, and what beginners should actually buy."
-            "Starter-friendly songs to build confidence and rhythm."
-            "Pick thickness affects tone and control—choose correctly."
-            "Understand chord families and why songs feel easy after this."
-            "A daily routine that makes progress visible in weeks."
-            "The real reasons people quit—and how to stay consistent."
-            "Trending songs that sound great on acoustic and reels."
-            "Which one to start with, based on goals and budget."
-          )
-
-          TITLE="${TITLES[$DAY_INDEX]}"
-          SLUG="${SLUGS[$DAY_INDEX]}"
-          EXCERPT="${EXCERPTS[$DAY_INDEX]}"
-
-          FILE="blog/${DATE}-${SLUG}.md"
-
-          # Create the post only if it doesn't exist already
-          if [ ! -f "$FILE" ]; then
-            cat > "$FILE" <<EOF
-          ---
-          title: "$TITLE"
-          date: "$DATE"
-          slug: "$SLUG"
-          excerpt: "$EXCERPT"
-          keywords: "guitar, guitar lessons, beginner guitar, guitar practice, Abhishek Sessions"
-          ---
-
-          ## $TITLE
-
-          $EXCERPT
-
-          ### What you should do today
-          - Practice 10 minutes with a metronome (slow and clean).
-          - Focus on accuracy first, speed later.
-          - Record 20 seconds and listen for timing mistakes.
-
-          ### Quick tip
-          Most beginners don’t fail because of talent. They fail because they practice without a system.
-
-          ### Want structured progress?
-          **Abhishek Sessions** offers private one-to-one guitar mentorship across Delhi and online.  
-          Learn with a clear plan, discipline, and performance confidence.
-          EOF
-          fi
-
-          # Build blog/index.json for your blog page
-          python3 - <<'PY'
-          import os, json, re
+          python << 'PY'
+          import os
+          import json
           from datetime import datetime
 
           blog_dir = "blog"
-          posts = []
-          for fn in os.listdir(blog_dir):
-              if not fn.endswith(".md"): 
+          os.makedirs(blog_dir, exist_ok=True)
+
+          posts_pool = [
+              {
+                  "title": "How to Choose the Best Guitar Teacher (Avoid These 5 Mistakes)",
+                  "slug": "best-guitar-teacher",
+                  "excerpt": "A simple checklist to pick the right mentor and avoid wasting months."
+              },
+              {
+                  "title": "Best Guitar for Beginners in India (Complete Buying Guide)",
+                  "slug": "best-guitar-for-beginners-india",
+                  "excerpt": "A practical buying guide for choosing your first guitar in India."
+              },
+              {
+                  "title": "Guitar String Guide: Which Strings Are Best for Beginners?",
+                  "slug": "best-guitar-strings-for-beginners",
+                  "excerpt": "Gauge, feel, and what beginners should actually buy."
+              },
+              {
+                  "title": "10 Easy Guitar Songs Every Beginner Should Learn",
+                  "slug": "easy-guitar-songs-for-beginners",
+                  "excerpt": "Starter-friendly songs to build confidence and rhythm."
+              },
+              {
+                  "title": "Guitar Pick Sizes Explained (Most Beginners Use the Wrong One)",
+                  "slug": "best-guitar-pick-for-beginners",
+                  "excerpt": "Pick thickness affects tone and control—choose correctly."
+              },
+              {
+                  "title": "What is a Chord Family? (Secret Behind Most Songs)",
+                  "slug": "guitar-chord-family-explained",
+                  "excerpt": "Understand chord families and why songs feel easy after this."
+              },
+              {
+                  "title": "How to Learn Guitar Faster (Practice Routine That Works)",
+                  "slug": "learn-guitar-faster-practice-routine",
+                  "excerpt": "A daily routine that makes progress visible in weeks."
+              },
+              {
+                  "title": "Why Many Guitar Students Quit (And How to Avoid It)",
+                  "slug": "why-guitar-students-quit",
+                  "excerpt": "The real reasons people quit—and how to stay consistent."
+              },
+              {
+                  "title": "Top 10 Viral Guitar Songs Everyone Loves Playing",
+                  "slug": "viral-guitar-songs",
+                  "excerpt": "Trending songs that sound great on acoustic and reels."
+              },
+              {
+                  "title": "Acoustic vs Electric Guitar: Which One Should You Learn First?",
+                  "slug": "acoustic-vs-electric-guitar",
+                  "excerpt": "Which one to start with, based on goals and budget."
+              }
+          ]
+
+          today = datetime.utcnow().strftime("%Y-%m-%d")
+          day_num = datetime.utcnow().day
+          chosen = posts_pool[(day_num - 1) % len(posts_pool)]
+
+          md_filename = f"{today}-{chosen['slug']}.md"
+          md_path = os.path.join(blog_dir, md_filename)
+
+          body = f"""# {chosen['title']}
+
+{chosen['excerpt']}
+
+## Why this matters
+Many beginners waste time and money because they start without the right guidance, gear, or practice structure.
+
+## What you should do
+- Focus on clarity before speed.
+- Build correct fundamentals first.
+- Avoid random YouTube learning without structure.
+- Use the right instrument and accessories for your level.
+
+## Final note
+If you want structured one-to-one music mentorship and honest guidance on instruments, Abhishek Sessions can help you choose the right path.
+"""
+
+          with open(md_path, "w", encoding="utf-8") as f:
+              f.write(body)
+
+          valid_posts = []
+          for file in os.listdir(blog_dir):
+              if not file.endswith(".md"):
                   continue
-              path = os.path.join(blog_dir, fn)
-              with open(path, "r", encoding="utf-8") as f:
-                  txt = f.read()
 
-              # Read frontmatter
-              m = re.search(r"^---\s*(.*?)\s*---", txt, re.S | re.M)
-              meta = {}
-              if m:
-                  fm = m.group(1).splitlines()
-                  for line in fm:
-                      if ":" in line:
-                          k,v = line.split(":",1)
-                          meta[k.strip()] = v.strip().strip('"')
+              # Accept only files like 2026-03-05-something.md
+              if len(file) < 15 or file[4] != "-" or file[7] != "-":
+                  continue
 
-              title = meta.get("title","")
-              date = meta.get("date","")
-              slug = meta.get("slug","")
-              excerpt = meta.get("excerpt","")
+              date_part = file[:10]
+              slug_part = file[11:-3]
 
-              # URL of the md file on site
-              url = f"/{blog_dir}/{fn}"
+              title = ""
+              excerpt = ""
 
-              posts.append({
-                  "title": title,
-                  "date": date,
-                  "slug": slug,
-                  "excerpt": excerpt,
-                  "url": url
-              })
+              with open(os.path.join(blog_dir, file), "r", encoding="utf-8") as f:
+                  lines = [line.strip() for line in f.readlines() if line.strip()]
 
-          # sort by date desc
-          def parse(d):
-              try:
-                  return datetime.strptime(d, "%Y-%m-%d")
-              except:
-                  return datetime.min
+              if lines and lines[0].startswith("# "):
+                  title = lines[0][2:].strip()
 
-          posts.sort(key=lambda x: parse(x.get("date","")), reverse=True)
+              if len(lines) > 1:
+                  excerpt = lines[1].strip()
 
-          out = {"posts": posts}
-          with open(os.path.join(blog_dir,"index.json"), "w", encoding="utf-8") as f:
-              json.dump(out, f, ensure_ascii=False, indent=2)
+              if title:
+                  valid_posts.append({
+                      "title": title,
+                      "date": date_part,
+                      "slug": slug_part,
+                      "excerpt": excerpt,
+                      "url": f"/blog/{file}"
+                  })
+
+          valid_posts.sort(key=lambda x: x["date"], reverse=True)
+
+          with open(os.path.join(blog_dir, "index.json"), "w", encoding="utf-8") as f:
+              json.dump({"posts": valid_posts}, f, ensure_ascii=False, indent=2)
+
+          print("Generated blog post and refreshed blog/index.json")
           PY
 
-      - name: Commit and Push
+      - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
 
           git add blog
-
-          git commit -m "Auto blog post $(date +'%Y-%m-%d')" || echo "No changes to commit"
-
-          git pull --rebase
-          git push
+          git commit -m "Auto blog update $(date -u +'%Y-%m-%d')" || echo "No changes to commit"
+          git pull --rebase origin main
+          git push origin main

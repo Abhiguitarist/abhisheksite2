@@ -650,23 +650,27 @@
   <script>
 
 fetch("/blog/index.json")
-.then(r => r.json())
+.then(res => res.json())
 .then(data => {
 
 let posts = data.posts.slice(0,3)
 
 let html = ""
 
-posts.forEach(p => {
+posts.forEach(post => {
 
 html += `
-<a href="/post.html?post=${p.url}" class="blog-card">
+<div class="blog-preview-card">
 
-<h3>${p.title}</h3>
+<a href="/post.html?post=${post.url}">
 
-<p>${p.excerpt}</p>
+<h3>${post.title}</h3>
+
+<p>${post.excerpt}</p>
 
 </a>
+
+</div>
 `
 
 })
